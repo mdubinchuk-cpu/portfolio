@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduFlow | Английский в Потоке</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --edu-blue: #3b82f6;
+            --edu-yellow: #facc15;
+            --edu-purple: #8b5cf6;
+            --edu-bg: #f8fafc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--edu-bg);
+            color: #1e293b;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Nav */
+        nav {
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--edu-blue);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo span {
+            color: var(--edu-purple);
+        }
+
+        /* Hero */
+        header {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            padding: 60px 5%;
+            background-image: 
+                linear-gradient(to right, rgba(255,255,255,0.95) 40%, transparent 100%),
+                url('../assets/hero/eduflow.png');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .hero-content {
+            max-width: 600px;
+        }
+
+        .badge {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--edu-blue);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: clamp(3rem, 8vw, 4.5rem);
+            line-height: 1.05;
+            margin-bottom: 30px;
+            font-weight: 900;
+        }
+
+        h1 mark {
+            background: none;
+            color: var(--edu-blue);
+            text-decoration: underline wavy var(--edu-yellow);
+            text-underline-offset: 10px;
+        }
+
+        .promo {
+            font-size: 1.25rem;
+            color: #64748b;
+            margin-bottom: 40px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-main {
+            background: var(--edu-blue);
+            color: white;
+            padding: 18px 36px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.3s;
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-main:hover {
+            transform: translateY(-5px);
+            background: var(--edu-purple);
+            box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3);
+        }
+
+        /* Statistics */
+        .stats {
+            padding: 40px 5%;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 40px;
+        }
+
+        .stat-item h4 {
+            font-size: 2rem;
+            color: var(--edu-blue);
+        }
+
+        .stat-item p {
+            color: #64748b;
+        }
+
+        /* Footer */
+        footer {
+            padding: 40px 5%;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        footer a {
+            color: var(--edu-blue);
+            text-decoration: none;
+            font-weight: 700;
+            display: inline-block;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">Edu<span>Flow</span></div>
+        <div class="nav-links">
+            <a href="#" style="text-decoration:none; color:inherit; font-weight:600;">Вход</a>
+        </div>
+    </nav>
+
+    <header>
+        <div class="hero-content">
+            <span class="badge">#1 Онлайн Английский</span>
+            <h1>Начни <mark>говорить</mark> уже сегодня</h1>
+            <p class="promo">Интерактивная платформа, персональные кураторы и фокус на разговорной практике. Учись там, где тебе удобно.</p>
+            <div class="btn-group">
+                <a href="#" class="btn-main">Попробовать бесплатно</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="stats">
+        <div class="stat-item">
+            <h4>15k+</h4>
+            <p>Учеников</p>
+        </div>
+        <div class="stat-item">
+            <h4>250+</h4>
+            <p>Преподавателей</p>
+        </div>
+        <div class="stat-item">
+            <h4>98%</h4>
+            <p>Успешных кейсов</p>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 EduFlow Online Education. Развивайся вместе с нами.</p>
+        <a href="../index.html">← Перейти в портфолио</a>
+    </footer>
+</body>
+</html>

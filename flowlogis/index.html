@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlowLogis | Блокчейн-Логистика</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f0f4f8;
+            --primary: #0052cc;
+            --secondary: #00b8d9;
+            --text-dark: #172b4d;
+            --text-light: #5e6c84;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'IBM Plex Sans', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Abstract Node Network Background and Hero Image */
+        .network-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1;
+            background-image: 
+                linear-gradient(135deg, rgba(0, 82, 204, 0.8) 0%, rgba(0, 184, 217, 0.8) 100%),
+                url('../assets/hero/flowlogis.png');
+            background-size: cover;
+            background-position: center;
+            overflow: hidden;
+        }
+
+        .node {
+            position: absolute;
+            background: rgba(0, 82, 204, 0.2);
+            border-radius: 50%;
+            animation: floatNode 10s infinite alternate ease-in-out;
+        }
+
+        .n1 { width: 300px; height: 300px; top: -10%; left: -5%; }
+        .n2 { width: 500px; height: 500px; bottom: -20%; right: -10%; background: rgba(0, 184, 217, 0.1); animation-delay: -3s; }
+        .n3 { width: 200px; height: 200px; top: 40%; left: 60%; background: rgba(0, 82, 204, 0.15); animation-duration: 15s; }
+
+        @keyframes floatNode {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(30px) scale(1.05); }
+        }
+
+        /* Nav */
+        header {
+            background: var(--white);
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(23, 43, 77, 0.05);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            width: 24px; height: 24px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border-radius: 4px;
+            transform: rotate(45deg);
+        }
+
+        .nav-links a {
+            color: var(--text-dark);
+            text-decoration: none;
+            margin-left: 30px;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: var(--primary); }
+
+        .btn-outline {
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            background: transparent;
+            padding: 8px 24px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-left: 30px;
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: var(--white);
+            box-shadow: 0 4px 15px rgba(0, 82, 204, 0.3);
+        }
+
+        /* Hero */
+        .hero {
+            padding: 160px 10% 80px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 24px;
+            color: var(--text-dark);
+        }
+
+        .hero h1 span {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-bottom: 40px;
+            max-width: 500px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 15px 35px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 82, 204, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 82, 204, 0.4);
+        }
+
+        /* Block UI Graphic */
+        .blocks-graphic {
+            position: relative;
+            height: 400px;
+        }
+
+        .block {
+            background: var(--white);
+            border-left: 4px solid var(--secondary);
+            padding: 24px;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(23, 43, 77, 0.08);
+            position: absolute;
+            width: 300px;
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .block::after {
+            content: '🔗';
+            position: absolute;
+            right: -25px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            color: var(--secondary);
+        }
+
+        .block:last-child::after { display: none; }
+
+        .b1 { top: 0; left: 0; z-index: 3; animation: slideIn 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .b2 { top: 120px; left: 20%; z-index: 2; border-color: var(--primary); animation: slideIn 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s backwards; }
+        .b3 { top: 240px; left: 40%; z-index: 1; border-color: #36b37e; animation: slideIn 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.4s backwards; }
+
+        .block h3 { margin-bottom: 8px; font-size: 1.1rem; }
+        .block p { color: var(--text-light); font-size: 0.9rem; }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .hero { grid-template-columns: 1fr; text-align: center; }
+            .hero p { margin: 0 auto 40px; }
+            .blocks-graphic { margin-top: 40px; }
+            .block { position: relative; top: 0 !important; left: 0 !important; margin: 0 auto 20px; }
+            .block::after { right: 50%; bottom: -35px; top: auto; transform: translateX(50%) rotate(90deg); }
+        }
+
+        footer { text-align: center; margin-top: 50px; font-size: 0.9em; }
+        footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="network-bg">
+        <div class="node n1"></div>
+        <div class="node n2"></div>
+        <div class="node n3"></div>
+    </div>
+
+    <header>
+        <div class="logo">
+            <div class="logo-icon"></div>
+            FlowLogis
+        </div>
+        <div class="nav-links">
+            <a href="#">Решения</a>
+            <a href="#">Технологии</a>
+            <button class="btn-outline">Вход в систему</button>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div>
+            <h1>Прозрачность в <span>каждом звене</span> цепи</h1>
+            <p>Платформа распределенного реестра для глобальных перевозок. Отслеживайте грузы, смарт-контракты и документы в реальном времени с нулевым риском подделки.</p>
+            <button class="btn-primary">Присоединиться к сети</button>
+        </div>
+        <div class="blocks-graphic">
+            <div class="block b1">
+                <h3>Заказ #8423</h3>
+                <p>Производство завершено<br><span style="color:var(--text-light);font-size:0.8rem">Hash: 8x92a1...4b2</span></p>
+            </div>
+            <div class="block b2">
+                <h3>Таможня (Смарт-контракт)</h3>
+                <p>Автоматическая верификация<br><span style="color:var(--text-light);font-size:0.8rem">Hash: 1f0cd...e91</span></p>
+            </div>
+            <div class="block b3">
+                <h3>Доставка в порт</h3>
+                <p>Подтверждено IoT-датчиком<br><span style="color:var(--text-light);font-size:0.8rem">Hash: c73ba...20f</span></p>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <p>FlowLogis Enterprise Blockchain &copy; 2026. <br><br><a href="../index.html"> Вернуться в портфолио &rarr;</a></p>
+    </footer>
+</body>
+</html>

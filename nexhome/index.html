@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexHome | Умный дом будущего</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-light: #f3f4f6;
+            --primary-blue: #3b82f6;
+            --text-dark: #1f2937;
+            --text-muted: #6b7280;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.8);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-light);
+            background-image: 
+                linear-gradient(rgba(243, 244, 246, 0.8), rgba(243, 244, 246, 0.8)),
+                url('../assets/hero/nexhome.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--text-dark);
+            overflow-x: hidden;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Glassmorphism utility */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Navbar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            letter-spacing: -0.5px;
+        }
+
+        .logo span {
+            color: var(--primary-blue);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+        }
+
+        .nav-links a {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-blue);
+        }
+
+        .btn-primary {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 100px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 150px 5% 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 7vw, 6rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            letter-spacing: -0.03em;
+            color: var(--text-dark);
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin-bottom: 50px;
+        }
+
+        /* Mock UI / Dashboard */
+        .dashboard-preview {
+            width: 100%;
+            height: 600px;
+            position: relative;
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .widget {
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.3s;
+        }
+
+        .widget:hover {
+            transform: translateY(-5px);
+        }
+
+        .w-climate {
+            grid-column: 1 / 2;
+            grid-row: 1 / 3;
+        }
+
+        .w-main {
+            grid-column: 2 / 3;
+            grid-row: 1 / 3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #fff 0%, #f3f4f6 100%);
+        }
+
+        .w-lighting {
+            grid-column: 3 / 4;
+            grid-row: 1 / 2;
+        }
+
+        .w-security {
+            grid-column: 3 / 4;
+            grid-row: 2 / 3;
+        }
+
+        .widget-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .widget-value {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        .toggle-switch {
+            width: 60px;
+            height: 32px;
+            background: var(--primary-blue);
+            border-radius: 30px;
+            position: relative;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            margin-top: 100px;
+        }
+        
+        footer a {
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        @media (max-width: 900px) {
+            .dashboard-preview {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto;
+                height: auto;
+            }
+            .w-climate, .w-main, .w-lighting, .w-security {
+                grid-column: 1 / -1;
+                grid-row: auto;
+                min-height: 200px;
+            }
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container glass">
+            <div class="logo">Nex<span>Home</span></div>
+            <div class="nav-links">
+                <a href="#">Устройства</a>
+                <a href="#">Приложение</a>
+                <a href="#">Поддержка</a>
+            </div>
+            <button class="btn-primary">Купить</button>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <h1>Живите в гармонии<br>с вашим домом</h1>
+        <p>Интеллектуальная экосистема, которая адаптируется под ваши привычки. Управляйте климатом, светом и безопасностью с элегантностью.</p>
+        
+        <div class="dashboard-preview">
+            <div class="widget glass w-climate">
+                <div class="widget-title">Климат</div>
+                <div>
+                    <div class="widget-value">22°C</div>
+                    <p style="color: var(--text-muted);">Идеально<br>Влажность: 45%</p>
+                </div>
+            </div>
+            <div class="widget glass w-main">
+                <div style="text-align: center;">
+                    <div style="font-size: 5rem; margin-bottom: -10px;">🏠</div>
+                    <h2>Дом под защитой</h2>
+                    <p style="color: var(--text-muted); margin-top: 10px;">Все системы работают штатно</p>
+                </div>
+            </div>
+            <div class="widget glass w-lighting">
+                <div class="widget-title">Освещение</div>
+                <div>
+                    <h3 style="margin-top: 10px;">Гостиная</h3>
+                    <div class="toggle-switch"></div>
+                </div>
+            </div>
+            <div class="widget glass w-security">
+                <div class="widget-title">Безопасность</div>
+                <div>
+                    <h3 style="margin-top: 10px;">Камеры Активны</h3>
+                    <p style="color: var(--text-muted);">Распознано 2 человека</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 NexHome Systems. <a href="../index.html">&larr; Вернуться в портфолио</a></p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberGuard | AI-Security | v2.0</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #05050a;
+            --neon: #00f0ff;
+            --neon-dim: rgba(0, 240, 255, 0.2);
+            --danger: #ff0055;
+            --white: #f0f2ff;
+            --dim: rgba(240,242,255,0.45);
+            --grid: rgba(0,240,255,0.06);
+            --mono: 'Space Mono', monospace;
+            --display: 'Syne', sans-serif;
+        }
+
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg);
+            color: var(--white);
+            font-family: var(--mono);
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* ─── CUSTOM CURSOR ─── */
+        #cursor {
+            position: fixed;
+            width: 8px; height: 8px;
+            background: var(--neon);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%,-50%);
+            transition: transform 0.08s, width 0.2s, height 0.2s;
+        }
+        #cursor-ring {
+            position: fixed;
+            width: 40px; height: 40px;
+            border: 1px solid var(--neon);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%,-50%);
+            transition: left 0.1s ease, top 0.1s ease;
+            opacity: 0.5;
+        }
+        #cursor-ring::before, #cursor-ring::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%,-50%);
+            background: var(--neon);
+        }
+        #cursor-ring::before { width: 100%; height: 1px; opacity: 0.3; }
+        #cursor-ring::after { height: 100%; width: 1px; opacity: 0.3; }
+
+        /* ─── GRID BG ─── */
+        body::before {
+            content:'';
+            position: fixed; inset:0;
+            background-image:
+                linear-gradient(var(--grid) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events:none;
+            z-index:0;
+        }
+
+        /* ─── CANVAS DATA STREAM ─── */
+        #dataStream {
+            position: fixed;
+            inset:0;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.4;
+        }
+
+        /* ─── NAV ─── */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 6%;
+            border-bottom: 1px solid var(--neon-dim);
+            background: rgba(5,5,10,0.8);
+            backdrop-filter: blur(12px);
+        }
+
+        .logo {
+            font-family: var(--display);
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .logo span { color: var(--neon); }
+        .logo-icon {
+            width: 30px; height: 30px;
+            border: 2px solid var(--neon);
+            position: relative;
+            animation: rotateLogo 8s linear infinite;
+        }
+        @keyframes rotateLogo { to { transform: rotate(360deg); } }
+
+        .nav-links { display: flex; gap: 32px; }
+        .nav-links a {
+            color: var(--dim);
+            text-decoration: none;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: var(--neon); }
+
+        /* ─── HERO ─── */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 120px 6% 80px;
+            position: relative;
+            z-index: 1;
+            background-image: 
+                linear-gradient(rgba(5,5,10,0.4) 0%, rgba(5,5,10,0.95) 85%, var(--bg) 100%),
+                url('../assets/hero/cyberguard.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .hero-left { flex: 1; max-width: 750px; }
+
+        .tag-wrap {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px;
+            border: 1px solid var(--neon-dim);
+            background: rgba(0,240,255,0.05);
+            font-size: 0.7rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--neon);
+            margin-bottom: 32px;
+            animation: fadeUp 0.8s both;
+        }
+        .status-dot {
+            width: 6px; height: 6px;
+            background: var(--neon);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--neon);
+            animation: blink 1.5s infinite;
+        }
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+        .hero h1 {
+            font-family: var(--display);
+            font-size: clamp(3.5rem, 8vw, 6.5rem);
+            font-weight: 900;
+            line-height: 1;
+            text-transform: uppercase;
+            letter-spacing: -2px;
+            margin-bottom: 32px;
+            animation: fadeUp 0.8s 0.2s both;
+        }
+        .hero h1 .accent { color: var(--neon); text-shadow: 0 0 30px rgba(0,240,255,0.3); }
+
+        .hero-desc {
+            font-size: 0.95rem;
+            line-height: 1.8;
+            color: var(--dim);
+            max-width: 480px;
+            margin-bottom: 48px;
+            animation: fadeUp 0.8s 0.4s both;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 20px;
+            animation: fadeUp 0.8s 0.6s both;
+        }
+
+        .btn {
+            padding: 18px 40px;
+            font-family: var(--display);
+            font-weight: 800;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: none;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-primary { background: var(--neon); color: #000; border: none; }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,240,255,0.4); }
+
+        .btn-outline { background: transparent; color: var(--neon); border: 1px solid var(--neon); }
+        .btn-outline:hover { background: rgba(0,240,255,0.1); }
+
+        /* ─── HUD PANEL ─── */
+        .hero-right {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
+            perspective: 1000px;
+        }
+
+        .hud-card {
+            background: rgba(5,5,10,0.85);
+            border: 1px solid var(--neon-dim);
+            backdrop-filter: blur(10px);
+            padding: 32px;
+            width: 320px;
+            transform: rotateY(-15deg);
+            animation: hudFade 1s 0.8s both;
+        }
+        @keyframes hudFade { from { opacity: 0; transform: rotateY(-30deg) translateZ(-100px); } to { opacity: 1; transform: rotateY(-15deg) translateZ(0); } }
+
+        .hud-header {
+            font-size: 0.7rem;
+            letter-spacing: 3px;
+            color: var(--neon);
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .hud-stat { margin-bottom: 20px; }
+        .hud-stat-label { font-size: 0.6rem; text-transform: uppercase; color: var(--dim); margin-bottom: 8px; }
+        .hud-progress { height: 2px; background: rgba(0,240,255,0.1); position: relative; }
+        .hud-progress-fill { position: absolute; height: 100%; background: var(--neon); width: 0%; transition: width 1s ease-out; }
+        
+        .threat-log {
+            margin-top: 30px;
+            font-size: 0.65rem;
+            color: var(--dim);
+            max-height: 120px;
+            overflow: hidden;
+        }
+        .log-entry { margin-bottom: 6px; border-left: 1px solid var(--neon-dim); padding-left: 8px; }
+        .log-entry span { color: var(--neon); }
+        .log-entry.critical { border-left-color: var(--danger); }
+        .log-entry.critical span { color: var(--danger); }
+
+        /* ─── TICKER ─── */
+        .ticker {
+            background: var(--neon);
+            color: #000;
+            padding: 12px 0;
+            overflow: hidden;
+            white-space: nowrap;
+            font-weight: 700;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .ticker-inner { display: inline-block; animation: ticker 30s linear infinite; }
+        @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+        /* ─── FOOTER ─── */
+        footer {
+            padding: 40px 6%;
+            border-top: 1px solid var(--neon-dim);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.7rem;
+            color: var(--dim);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        @keyframes fadeUp { from { opacity:0; transform: translateY(30px); } to { opacity:1; transform: translateY(0); } }
+
+        .back-link { color: var(--neon); text-decoration: none; transition: opacity 0.3s; }
+        .back-link:hover { opacity: 0.7; }
+    </style>
+</head>
+<body>
+
+<canvas id="dataStream"></canvas>
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<nav>
+    <div class="logo">
+        <div class="logo-icon"></div>
+        CYBER<span>GUARD</span>
+    </div>
+    <div class="nav-links">
+        <a href="#">Аналитика</a>
+        <a href="#">Стек</a>
+        <a href="#">Безопасность</a>
+    </div>
+</nav>
+
+<section class="hero">
+    <div class="hero-left">
+        <div class="tag-wrap">
+            <span class="status-dot"></span>
+            DEFENSE SYSTEMS ONLINE
+        </div>
+        <h1>
+            ЗАЩИТА <span class="accent">НОВОГО</span><br>ПОКОЛЕНИЯ
+        </h1>
+        <p class="hero-desc">
+            Разверните интеллектуальный щит CyberGuard за считанные минуты. Полная неуязвимость для угроз любого типа.
+        </p>
+        <div class="hero-actions">
+            <button class="btn btn-primary">ЗАПУСТИТЬ СКАНЕР</button>
+            <button class="btn btn-outline">ДОКУМЕНТАЦИЯ</button>
+        </div>
+    </div>
+
+    <div class="hero-right">
+        <div class="hud-card">
+            <div class="hud-header">
+                <span>SYSTEM STATUS</span>
+                <span>V3.04</span>
+            </div>
+            
+            <div class="hud-stat">
+                <div class="hud-stat-label">Neural Shield Integrity</div>
+                <div class="hud-progress"><div class="hud-progress-fill" style="width: 98%;"></div></div>
+            </div>
+            
+            <div class="hud-stat">
+                <div class="hud-stat-label">Data Packet Filtering</div>
+                <div class="hud-progress"><div class="hud-progress-fill" style="width: 76%;"></div></div>
+            </div>
+
+            <div class="threat-log" id="threatLog">
+                <div class="log-entry">[08:42:11] <span>FIREWALL_ACTIVE</span></div>
+                <div class="log-entry">[08:42:45] <span>ENCRYPTION_COMPLETE</span></div>
+                <div class="log-entry critical">[08:43:02] <span>THREAT_BLOCK: IP_201.22.4</span></div>
+                <div class="log-entry">[08:43:15] <span>SYSTEM_STABLE</span></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="ticker">
+    <div class="ticker-inner">
+        AI-SECURITY MONITORING ENABLED • THREAT NEUTRALIZATION ACTIVE • ENCRYPTION PROTOCOL RSA-4096 • QUANTUM DEFENSE READY • NEURAL ENGINE v4.2 • 
+        AI-SECURITY MONITORING ENABLED • THREAT NEUTRALIZATION ACTIVE • ENCRYPTION PROTOCOL RSA-4096 • QUANTUM DEFENSE READY • NEURAL ENGINE v4.2 • 
+    </div>
+</div>
+
+<footer>
+    <div>© 2026 CYBERGUARD SECURITY</div>
+    <a href="../index.html" class="back-link">← НАЗАД В ПОРТФОЛИО</a>
+</footer>
+
+<script>
+    /* ─── CURSOR ─── */
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursor-ring');
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+        ring.style.left = e.clientX + 'px';
+        ring.style.top = e.clientY + 'px';
+    });
+    
+    document.querySelectorAll('a, button').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+            cursor.style.width = '20px';
+            cursor.style.height = '20px';
+            ring.style.width = '60px';
+            ring.style.height = '60px';
+        });
+        el.addEventListener('mouseleave', () => {
+            cursor.style.width = '8px';
+            cursor.style.height = '8px';
+            ring.style.width = '40px';
+            ring.style.height = '40px';
+        });
+    });
+
+    /* ─── DATA STREAM CANVAS ─── */
+    const canvas = document.getElementById('dataStream');
+    const ctx = canvas.getContext('2d');
+    let w, h;
+
+    function resize() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    const particles = [];
+    class Particle {
+        constructor() {
+            this.x = Math.random() * w;
+            this.y = Math.random() * h;
+            this.vx = (Math.random() - 0.5) * 1.5;
+            this.vy = (Math.random() - 0.5) * 1.5;
+        }
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            if(this.x < 0 || this.x > w) this.vx *= -1;
+            if(this.y < 0 || this.y > h) this.vy *= -1;
+        }
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, 1.5, 0, Math.PI * 2);
+            ctx.fillStyle = '#00f0ff';
+            ctx.fill();
+        }
+    }
+
+    for(let i=0; i<100; i++) particles.push(new Particle());
+
+    function animate() {
+        ctx.clearRect(0,0,w,h);
+        particles.forEach((p, i) => {
+            p.update();
+            p.draw();
+            for(let j=i+1; j<particles.length; j++) {
+                const dist = Math.hypot(p.x - particles[j].x, p.y - particles[j].y);
+                if(dist < 150) {
+                    ctx.beginPath();
+                    ctx.moveTo(p.x, p.y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.strokeStyle = `rgba(0, 240, 255, ${1 - dist/150})`;
+                    ctx.lineWidth = 0.5;
+                    ctx.stroke();
+                }
+            }
+        });
+        requestAnimationFrame(animate);
+    }
+    animate();
+
+    /* ─── LIVE THREAT LOG ─── */
+    const log = document.getElementById('threatLog');
+    const entries = [
+        '[11:02:45] ENCRYPTION_VERIFIED',
+        '[11:03:12] TRAFFIC_ANALYZE: OK',
+        '[11:03:44] PORT_SCAN_DETECTED',
+        '[11:03:44] ALERT: ATTEMPT_BLOCKED',
+        '[11:04:01] NEURAL_BUFFER_FLUSH'
+    ];
+    setInterval(() => {
+        const entry = document.createElement('div');
+        entry.className = 'log-entry';
+        const time = new Date().toLocaleTimeString('ru-RU', {hour: '2-digit', minute: '2-digit', second: '2-digit'});
+        const msg = entries[Math.floor(Math.random() * entries.length)];
+        entry.innerHTML = `[${time}] <span>${msg.split(': ')[1] || msg.split(' ')[1]}</span>`;
+        if(msg.includes('ALERT') || msg.includes('BLOCK')) entry.classList.add('critical');
+        log.appendChild(entry);
+        if(log.children.length > 8) log.removeChild(log.children[0]);
+    }, 3000);
+</script>
+
+</body>
+</html>

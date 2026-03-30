@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AeroDrop | Доставка Дронами</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --text-dark: #0f172a;
+            --orange: #ea580c;
+            --orange-light: #ffedd5;
+            --gray-light: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            background-image: 
+                linear-gradient(rgba(248, 250, 252, 0.9), rgba(248, 250, 252, 0.9)),
+                url('../assets/hero/aerodrop.png'),
+                linear-gradient(var(--gray-light) 1px, transparent 1px),
+                linear-gradient(90deg, var(--gray-light) 1px, transparent 1px);
+            background-size: cover, cover, 50px 50px, 50px 50px;
+            background-position: center;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Typography */
+        h1, h2, h3 { font-family: 'Inter', sans-serif; }
+        .mono { font-family: 'Roboto Mono', monospace; }
+
+        /* Nav */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 5%;
+            background: rgba(248, 250, 252, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--text-dark);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo::before {
+            content: '';
+            display: inline-block;
+            width: 30px; height: 30px;
+            background: var(--orange);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            animation: spinFast 10s linear infinite;
+        }
+
+        @keyframes spinFast { 100% { transform: rotate(360deg); } }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        .nav-links a:hover {
+            color: var(--orange);
+        }
+
+        /* Hero */
+        .hero {
+            padding: 150px 5% 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .hero-content {
+            flex: 1;
+            max-width: 600px;
+            position: relative;
+        }
+
+        .tag {
+            background: var(--text-dark);
+            color: #fff;
+            padding: 4px 12px;
+            display: inline-block;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 7vw, 5.5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+        }
+
+        .hero h1 span {
+            color: var(--orange);
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: #475569;
+            margin-bottom: 40px;
+            max-width: 500px;
+        }
+
+        .btn-primary {
+            background: var(--orange);
+            color: #fff;
+            border: 2px solid var(--orange);
+            padding: 16px 32px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 8px 8px 0px var(--text-dark);
+        }
+
+        .btn-primary:hover {
+            transform: translate(4px, 4px);
+            box-shadow: 4px 4px 0px var(--text-dark);
+        }
+
+        /* Drone Tracking UI Mock */
+        .radar-box {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            height: 500px;
+        }
+
+        .radar {
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            border: 2px dashed var(--orange);
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .radar::before {
+            content: '';
+            position: absolute;
+            width: 200px; height: 200px;
+            border-radius: 50%;
+            border: 1px solid rgba(234, 88, 12, 0.3);
+        }
+
+        .scanner {
+            position: absolute;
+            width: 50%; height: 50%;
+            top: 0; right: 0;
+            background: linear-gradient(45deg, transparent, rgba(234, 88, 12, 0.4));
+            transform-origin: bottom left;
+            animation: radarScan 3s linear infinite;
+        }
+
+        @keyframes radarScan { 100% { transform: rotate(360deg); } }
+
+        .drone-dot {
+            position: absolute;
+            width: 16px; height: 16px;
+            background: var(--text-dark);
+            border: 3px solid var(--orange);
+            border-radius: 50%;
+            top: 30%; right: 30%;
+            animation: pulseDot 1s infinite alternate;
+        }
+
+        @keyframes pulseDot { 100% { transform: scale(1.5); } }
+
+        /* Ticker Tape */
+        .ticker {
+            background: var(--text-dark);
+            color: var(--orange);
+            padding: 15px 0;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 1.2rem;
+            overflow: hidden;
+            white-space: nowrap;
+            width: 100vw;
+            position: absolute;
+            bottom: 0;
+        }
+
+        .ticker-text {
+            display: inline-block;
+            animation: scrollTicker 20s linear infinite;
+        }
+
+        @keyframes scrollTicker {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">AeroDrop</div>
+        <div class="nav-links">
+            <a href="#">Карта</a>
+            <a href="#">Тарифы</a>
+            <a href="#">API</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="tag">Next-Gen Delivery</div>
+            <h1>Доставка со скоростью <span>Света</span></h1>
+            <p>Ваши посылки доставляются автономными дронами за считанные минуты. Горизонт — не предел, это только начало пути.</p>
+            <button class="btn-primary">Рассчитать маршрут</button>
+        </div>
+        
+        <div class="radar-box">
+            <div class="radar">
+                <div class="scanner"></div>
+                <div class="drone-dot"></div>
+                <div class="mono" style="position: absolute; bottom: -40px; color: var(--text-dark); font-weight: 700;">
+                    STATUS: [DRONE AD-742 ACTIVE]
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="ticker">
+        <div class="ticker-text">
+            * НОВОЕ РЕШЕНИЕ ДЛЯ E-COMMERCE * СРЕДНЕЕ ВРЕМЯ ДОСТАВКИ: 14 МИНУТ * 100% АВТОНОМНО * НУЛЕВЫЕ ВЫБРОСЫ * 
+            <a href="../index.html" style="color: #fff; text-decoration: none; margin-left: 50px;">ВЕРНУТЬСЯ В ПОРТФОЛИО &rarr;</a>
+        </div>
+    </div>
+</body>
+</html>

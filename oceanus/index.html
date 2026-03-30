@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oceanus | Глубоководный Туризм</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Jost:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --sea-dark: #001220;
+            --sea-mid: #003049;
+            --sea-light: #48cae4;
+            --text-light: #f8f9fa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Jost', sans-serif;
+            background-color: var(--sea-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+            perspective: 1px;
+            height: 100vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        /* Ambient Underwater Effects and Hero Image */
+        .ambient-layer {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background-image: 
+                linear-gradient(rgba(0, 18, 32, 0.8), rgba(0, 18, 32, 0.9)),
+                url('../assets/hero/oceanus.png');
+            background-size: cover;
+            background-position: center;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        .particles {
+            position: absolute;
+            width: 100vw; height: 200vh;
+            background-image: radial-gradient(circle, rgba(200,240,255,0.15) 1px, transparent 1px);
+            background-size: 60px 60px;
+            animation: driftUp 30s infinite linear;
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        @keyframes driftUp {
+            from { transform: translateY(0); }
+            to { transform: translateY(-50px); }
+        }
+
+        /* Typography */
+        h1, h2, h3, .logo {
+            font-family: 'Cinzel', serif;
+        }
+
+        /* Navbar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px 10%;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            background: linear-gradient(to bottom, rgba(0,18,32,0.9), transparent);
+        }
+
+        .logo {
+            font-size: 2rem;
+            letter-spacing: 5px;
+            color: var(--sea-light);
+        }
+
+        .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            letter-spacing: 2px;
+            font-size: 0.9rem;
+            margin-left: 40px;
+            text-transform: uppercase;
+            transition: color 0.4s;
+            opacity: 0.8;
+        }
+        .nav-links a:hover { color: var(--sea-light); opacity: 1; }
+
+        /* HERO Section with Parallax */
+        .hero {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+            position: relative;
+            transform-style: preserve-3d;
+            padding: 0 20px;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(0deg, var(--sea-dark) 0%, transparent 40%);
+            z-index: 1;
+        }
+
+        .title-group {
+            position: relative;
+            z-index: 2;
+            transform: translateZ(-1px) scale(2);
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 10vw, 8rem);
+            font-weight: 400;
+            margin-bottom: 20px;
+            color: var(--sea-light);
+            text-shadow: 0 10px 40px rgba(72, 202, 228, 0.5);
+            letter-spacing: 8px;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            max-width: 600px;
+            margin: 0 auto 50px;
+        }
+
+        .explore-btn {
+            background: transparent;
+            color: var(--sea-light);
+            border: 1px solid var(--sea-light);
+            padding: 15px 40px;
+            font-family: inherit;
+            font-size: 1rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 2;
+        }
+
+        .explore-btn:hover {
+            background: rgba(72, 202, 228, 0.1);
+            box-shadow: 0 0 30px rgba(72, 202, 228, 0.4);
+            letter-spacing: 5px;
+        }
+
+        /* Mock Submarine Feature */
+        .content-section {
+            padding: 100px 10%;
+            background: var(--sea-dark);
+            position: relative;
+            z-index: 5;
+            text-align: center;
+        }
+
+        .content-section p {
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+            opacity: 0.8;
+            margin-bottom: 40px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 60px;
+            background: #000;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-family: 'Cinzel', serif;
+            letter-spacing: 2px;
+        }
+        
+        footer a { color: var(--sea-light); text-decoration: none; font-family: 'Jost', sans-serif;}
+    </style>
+</head>
+<body>
+    <div class="ambient-layer"></div>
+    <div class="particles"></div>
+
+    <nav>
+        <div class="logo">Oceanus</div>
+        <div class="nav-links">
+            <a href="#">Экспедиции</a>
+            <a href="#">Флот</a>
+            <a href="#">Контакты</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="title-group">
+            <h1>Бездна Ждет</h1>
+            <p>Эксклюзивные исследовательские экспедиции к загадкам Марианской Впадины и затонувшим артефактам на премиальных батискафах.</p>
+        </div>
+        <button class="explore-btn">Погрузиться</button>
+    </section>
+
+    <section class="content-section">
+        <h2>Роскошь на Глубине 11,000 метров</h2>
+        <br>
+        <p>Наши глубоководные аппараты оснащены прозрачными куполами из акрилового стекла, обеспечивая панорамный обзор на 360 градусов. Прикоснитесь к неизведанным тайнам океанских глубин в абсолютном комфорте.</p>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Oceanus Deep Sea Tourism. Увидимся на дне.<br><br> <a href="../index.html">Возврат к портфолио &rarr;</a></p>
+    </footer>
+</body>
+</html>

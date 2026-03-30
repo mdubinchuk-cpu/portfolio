@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexHome | Smart Ecosystem | v2.0</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #f8f9fa;
+            --primary: #007aff;
+            --text: #1d1d1f;
+            --text-muted: #86868b;
+            --glass: rgba(255, 255, 255, 0.72);
+            --border: rgba(0, 0, 0, 0.08);
+            --display: 'Syne', sans-serif;
+            --body: 'Outfit', sans-serif;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--body);
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* ─── CUSTOM CURSOR ─── */
+        #cursor {
+            position: fixed;
+            width: 8px; height: 8px;
+            background: var(--text);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%,-50%);
+            transition: transform 0.1s, width 0.3s, height 0.3s;
+        }
+        #cursor-ring {
+            position: fixed;
+            width: 40px; height: 40px;
+            border: 1px solid var(--text);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%,-50%);
+            transition: left 0.15s ease-out, top 0.15s ease-out;
+            opacity: 0.2;
+        }
+
+        /* ─── NAV ─── */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+        .nav-inner {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 12px 32px;
+            border-radius: 100px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.03);
+        }
+        .logo { font-family: var(--display); font-weight: 800; font-size: 1.2rem; }
+        .logo span { color: var(--primary); }
+        .nav-links { display: flex; gap: 24px; }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: var(--text); }
+        .btn-mini {
+            background: var(--text);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+        .btn-mini:hover { opacity: 0.8; }
+
+        /* ─── HERO ─── */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 180px 6% 100px;
+            background-image: 
+                linear-gradient(rgba(248,249,250,0.5), rgba(248,249,250,0.9)),
+                url('../assets/hero/nexhome.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .pill {
+            background: rgba(0,0,0,0.03);
+            border: 1px solid var(--border);
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 32px;
+            animation: fadeIn 0.8s both;
+        }
+
+        .hero h1 {
+            font-family: var(--display);
+            font-size: clamp(3rem, 7vw, 5.5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -2px;
+            margin-bottom: 24px;
+            max-width: 900px;
+            animation: fadeDown 1s cubic-bezier(.16,1,.3,1) both;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin-bottom: 48px;
+            animation: fadeUp 1s 0.2s both;
+        }
+
+        /* ─── DASHBOARD ─── */
+        .dashboard {
+            width: 100%;
+            max-width: 1100px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 40px;
+            animation: fadeUp 1s 0.4s both;
+        }
+
+        .widget {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            padding: 32px;
+            border-radius: 28px;
+            border: 1px solid var(--border);
+            text-align: left;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .widget:hover { transform: translateY(-5px); box-shadow: 0 10px 40px rgba(0,0,0,0.04); }
+
+        .widget-label { color: var(--text-muted); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; margin-bottom: 12px; }
+        .widget-val { font-size: 3rem; font-weight: 800; margin-bottom: 12px; }
+
+        .switch-row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+        .switch {
+            width: 52px; height: 31px;
+            background: #e9e9ea;
+            border-radius: 31px;
+            position: relative;
+            cursor: none;
+            transition: background 0.3s;
+        }
+        .switch::after {
+            content: '';
+            position: absolute;
+            top: 2px; left: 2px;
+            width: 27px; height: 27px;
+            background: #fff;
+            border-radius: 50%;
+            transition: transform 0.3s;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+        }
+        .switch.on { background: #34c759; }
+        .switch.on::after { transform: translateX(21px); }
+
+        .big-widget { grid-column: span 2; display: flex; align-items: center; justify-content: space-between; }
+        .cur-temp { font-size: 5rem; line-height: 1; }
+        
+        /* ─── FOOTER ─── */
+        footer { padding: 60px 20px; text-align: center; color: var(--text-muted); font-size: 0.9rem; }
+        footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 900px) {
+            .dashboard { grid-template-columns: 1fr; }
+            .big-widget { grid-column: span 1; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<nav>
+    <div class="nav-inner">
+        <div class="logo">Nex<span>Home</span></div>
+        <div class="nav-links">
+            <a href="#">Устройства</a>
+            <a href="#">Сцены</a>
+            <a href="#">Защита</a>
+        </div>
+        <a href="../index.html" class="btn-mini">Портфолио</a>
+    </div>
+</nav>
+
+<section class="hero">
+    <div class="pill">Smart Architecture v10.4</div>
+    <h1>Гармония вашего дома</h1>
+    <p>Технологии, которые не отвлекают. Интеллектуальный комфорт, настроенный под ваш ритм жизни.</p>
+
+    <div class="dashboard">
+        <div class="widget">
+            <div class="widget-label">Климат-контроль</div>
+            <div class="widget-val">22.4°</div>
+            <div style="font-size: 0.9rem; color: var(--text-muted);">Влажность: 45%</div>
+        </div>
+        
+        <div class="widget big-widget">
+            <div>
+                <div class="widget-label">Главная сцена</div>
+                <div class="widget-val" style="font-size: 2.2rem;">Добрый Вечер</div>
+                <div style="color:var(--text-muted); font-size:0.9rem;">8 устройств активно</div>
+            </div>
+            <div class="cur-temp">🏠</div>
+        </div>
+
+        <div class="widget">
+            <div class="widget-label">Освещение</div>
+            <div class="switch-row">
+                <span>Гостиная</span>
+                <div class="switch on" onclick="this.classList.toggle('on')"></div>
+            </div>
+            <div class="switch-row">
+                <span>Кухня</span>
+                <div class="switch" onclick="this.classList.toggle('on')"></div>
+            </div>
+        </div>
+
+        <div class="widget">
+            <div class="widget-label">Безопасность</div>
+            <div class="widget-val" style="font-size: 1.5rem; color: #34c759;">● Активна</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px;">Все двери заперты</div>
+        </div>
+
+        <div class="widget">
+            <div class="widget-label">Энергия</div>
+            <div class="widget-val">1.2 <span style="font-size: 1rem;">кВт/ч</span></div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">Экономия: 12%</div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <p>© 2026 NexHome Ecosystem. Designed for better living. <a href="../index.html">← Назад</a></p>
+</footer>
+
+<script>
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursor-ring');
+    
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+        ring.style.left = e.clientX + 'px';
+        ring.style.top = e.clientY + 'px';
+    });
+
+    document.querySelectorAll('a, button, .switch').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+            cursor.style.transform = 'translate(-50%,-50%) scale(2.5)';
+            cursor.style.background = 'rgba(0,122,255,0.2)';
+            ring.style.opacity = '0.5';
+            ring.style.borderColor = 'var(--primary)';
+        });
+        el.addEventListener('mouseleave', () => {
+            cursor.style.transform = 'translate(-50%,-50%) scale(1)';
+            cursor.style.background = 'var(--text)';
+            ring.style.opacity = '0.2';
+            ring.style.borderColor = 'var(--text)';
+        });
+    });
+</script>
+
+</body>
+</html>

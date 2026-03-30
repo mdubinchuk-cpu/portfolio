@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ApexArena | Киберспортивная Платформа</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@500;700&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b0b0b;
+            --primary: #e60000;
+            --primary-dark: #990000;
+            --text-light: #f0f0f0;
+            --gray-dark: #1f1f1f;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: var(--bg-color);
+            background-image: 
+                linear-gradient(rgba(11, 11, 11, 0.8), rgba(11, 11, 11, 0.8)),
+                url('../assets/hero/apexarena.png'),
+                linear-gradient(rgba(230,0,0,0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(230,0,0,0.05) 1px, transparent 1px);
+            background-size: cover, cover, 40px 40px, 40px 40px;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--text-light);
+            overflow-x: hidden;
+        }
+
+        /* Glitch Effect Utility */
+        .glitch {
+            position: relative;
+            display: inline-block;
+        }
+
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: var(--bg-color);
+        }
+
+        .glitch::before {
+            left: 2px;
+            text-shadow: -2px 0 red;
+            clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+            animation: glitch-anim 2s infinite linear alternate-reverse;
+        }
+
+        .glitch::after {
+            left: -2px;
+            text-shadow: -2px 0 blue;
+            clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+            animation: glitch-anim2 3s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim {
+            0% { clip-path: inset(20% 0 80% 0); transform: translate(2px, 2px); }
+            20% { clip-path: inset(60% 0 10% 0); transform: translate(-2px, -2px); }
+            40% { clip-path: inset(40% 0 50% 0); transform: translate(2px, -2px); }
+            60% { clip-path: inset(80% 0 5% 0); transform: translate(-2px, 2px); }
+            80% { clip-path: inset(10% 0 70% 0); transform: translate(2px, 2px); }
+            100% { clip-path: inset(30% 0 50% 0); transform: translate(-2px, -2px); }
+        }
+
+        @keyframes glitch-anim2 {
+            0% { clip-path: inset(10% 0 60% 0); transform: translate(-2px, 2px); }
+            20% { clip-path: inset(80% 0 5% 0); transform: translate(2px, -2px); }
+            40% { clip-path: inset(30% 0 50% 0); transform: translate(-2px, -2px); }
+            60% { clip-path: inset(50% 0 30% 0); transform: translate(2px, 2px); }
+            80% { clip-path: inset(5% 0 80% 0); transform: translate(-2px, 2px); }
+            100% { clip-path: inset(60% 0 10% 0); transform: translate(2px, -2px); }
+        }
+
+        /* Typography */
+        h1, h2, .logo {
+            font-family: 'Teko', sans-serif;
+            text-transform: uppercase;
+        }
+
+        /* Nav */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            border-bottom: 2px solid var(--primary-dark);
+            background: rgba(11, 11, 11, 0.9);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            color: var(--primary);
+            letter-spacing: 2px;
+            line-height: 1;
+        }
+
+        .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            margin-left: 30px;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: var(--primary); }
+
+        /* Hero */
+        .hero {
+            padding: 150px 5% 80px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Slanted Background Shape */
+        .hero::before {
+            content: '';
+            position: absolute;
+            right: 0; top: 0;
+            height: 100%; width: 50%;
+            background: var(--primary);
+            clip-path: polygon(20% 0, 100% 0, 100% 100%, 0 100%);
+            z-index: -1;
+            opacity: 0.1;
+        }
+
+        .hero-content {
+            max-width: 600px;
+        }
+
+        .hero h1 {
+            font-size: clamp(5rem, 10vw, 8rem);
+            line-height: 0.9;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: #ccc;
+            margin-bottom: 40px;
+        }
+
+        .btn-gamer {
+            background: transparent;
+            color: #fff;
+            border: 2px solid var(--primary);
+            padding: 15px 40px;
+            font-family: 'Teko', sans-serif;
+            font-size: 1.8rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+        }
+
+        .btn-gamer::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--primary);
+            z-index: -1;
+            transition: transform 0.3s;
+            transform: scaleX(0);
+            transform-origin: left;
+        }
+
+        .btn-gamer:hover::before { transform: scaleX(1); }
+        .btn-gamer:hover { color: #fff; box-shadow: 0 0 20px var(--primary); }
+
+        /* Mock Stats/Leaderboard */
+        .leaderboard {
+            flex: 1;
+            max-width: 400px;
+            background: var(--gray-dark);
+            border: 1px solid var(--primary-dark);
+            padding: 30px;
+            box-shadow: 10px 10px 0 rgba(230,0,0,0.2);
+            transform: perspective(1000px) rotateY(-15deg);
+        }
+
+        .leaderboard h3 {
+            font-family: 'Teko', sans-serif;
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+
+        .player-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #222;
+            font-weight: 600;
+        }
+
+        .player-row:hover { color: var(--primary); }
+        .top-1 { color: #ffd700; }
+
+        footer { text-align: center; padding: 40px; font-weight: 600; border-top: 1px solid var(--gray-dark); }
+        footer a { color: var(--primary); text-decoration: none; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo glitch" data-text="ApexArena">ApexArena</div>
+        <div class="nav-links">
+            <a href="#">Турниры</a>
+            <a href="#">Команды</a>
+            <a href="#">Трансляции</a>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="glitch" data-text="BATTLE FOR GLORY">BATTLE FOR GLORY</h1>
+            <p>Премиальная экосистема для профессиональных геймеров. Участвуй в турнирах, собирай команду и выигрывай миллионы в глобальной лиге.</p>
+            <button class="btn-gamer">Вступить в бой</button>
+        </div>
+
+        <div class="leaderboard">
+            <h3>ТОП ИГРОКОВ (GLOBAL)</h3>
+            <div class="player-row top-1">
+                <span>1. SHADOW_KILLER</span> <span>9982 LP</span>
+            </div>
+            <div class="player-row">
+                <span>2. NEON_GHOST</span> <span>9540 LP</span>
+            </div>
+            <div class="player-row">
+                <span>3. VOID_WALKER</span> <span>9120 LP</span>
+            </div>
+            <div class="player-row" style="border:none;">
+                <span>4. ZERO_COOL</span> <span>8990 LP</span>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 ApexArena Esports. <a href="../index.html"> Вернуться к портфолио &rarr;</a></p>
+    </footer>
+</body>
+</html>

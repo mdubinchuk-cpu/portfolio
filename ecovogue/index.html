@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoVogue | Устойчивая Мода</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;0,700;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f4efeb;
+            --text-dark: #3a4030;
+            --olive: #929982;
+            --sand: #e8dbce;
+            --accent: #dca78a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            line-height: 1.6;
+            transition: background-color 0.5s;
+        }
+
+        /* Ambient Blobs */
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: -1;
+            opacity: 0.6;
+        }
+
+        .blob-1 {
+            top: -10%; left: -10%;
+            width: 500px; height: 500px;
+            background: var(--sand);
+            animation: drift 20s infinite alternate;
+        }
+
+        .blob-2 {
+            bottom: -20%; right: 10%;
+            width: 600px; height: 600px;
+            background: var(--olive);
+            opacity: 0.3;
+            animation: drift 25s infinite alternate-reverse;
+        }
+
+        @keyframes drift {
+            0% { transform: translate(0,0) scale(1); }
+            100% { transform: translate(50px, 100px) scale(1.1); }
+        }
+
+        /* Typography */
+        h1, h2, h3, .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 500;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px 5%;
+            position: relative;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            letter-spacing: 1px;
+            color: var(--text-dark);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .nav-links a {
+            color: var(--text-dark);
+            text-decoration: none;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--olive);
+        }
+
+        /* Hero with Background Image */
+        .hero {
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+            background-image: 
+                linear-gradient(rgba(244, 239, 235, 0.7), rgba(244, 239, 235, 0.8)),
+                url('../assets/hero/ecovogue.png');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .hero h1 {
+            font-size: clamp(4rem, 10vw, 8rem);
+            line-height: 1;
+            margin-bottom: 20px;
+            letter-spacing: -2px;
+        }
+
+        .hero h1 i {
+            color: var(--olive);
+            font-style: italic;
+        }
+
+        .hero p {
+            max-width: 500px;
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            margin-bottom: 40px;
+            opacity: 0.8;
+            font-weight: 300;
+        }
+
+        .btn {
+            background-color: var(--text-dark);
+            color: var(--bg-color);
+            border: none;
+            padding: 16px 40px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 400;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-radius: 100px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 30px rgba(58, 64, 48, 0.15);
+        }
+
+        .btn:hover {
+            background-color: var(--olive);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(146, 153, 130, 0.3);
+        }
+
+        /* Circular image mock */
+        .nature-circle {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--sand), var(--olive));
+            margin: 50px auto 0;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            font-style: italic;
+        }
+
+        footer {
+            text-align: center;
+            padding: 60px 20px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+            color: var(--text-dark);
+            opacity: 0.7;
+        }
+        
+        footer a {
+            color: var(--text-dark);
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <nav>
+        <div class="logo">EcoVogue</div>
+        <div class="nav-links">
+            <a href="#">Коллекция</a>
+            <a href="#">Философия</a>
+            <a href="#">Материалы</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <h1>Этика <i>&</i> Эстетика</h1>
+        <p>Создаем моду будущего. Одежда из переработанных органических материалов, которая уважает природу и подчеркивает вашу индивидуальность.</p>
+        <button class="btn">Изучить Каталог</button>
+        <div class="nature-circle">Природа внутри</div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 EcoVogue Apparel. <a href="../index.html"> Вернуться в портфолио</a></p>
+    </footer>
+</body>
+</html>

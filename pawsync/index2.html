@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PawSync | Smart Pet Care | v2.0</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #fffbf2;
+            --primary: #ff6b35;
+            --secondary: #f7c59f;
+            --text: #2b2d42;
+            --text-muted: #8d99ae;
+            --white: #ffffff;
+            --display: 'Syne', sans-serif;
+            --body: 'Outfit', sans-serif;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--body);
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* ─── CUSTOM CURSOR ─── */
+        #cursor {
+            position: fixed;
+            width: 10px; height: 10px;
+            background: var(--primary);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%,-50%);
+        }
+        #cursor-ring {
+            position: fixed;
+            width: 44px; height: 44px;
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%,-50%);
+            transition: left 0.15s ease-out, top 0.15s ease-out;
+            opacity: 0.2;
+        }
+
+        /* ─── CANVAS ─── */
+        #canvas {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ─── NAV ─── */
+        nav {
+            position: fixed;
+            top: 20px; left: 0; right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+        }
+        .nav-inner {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            padding: 12px 32px;
+            border-radius: 50px;
+            border: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+        .logo { font-family: var(--display); font-size: 1.4rem; font-weight: 800; color: var(--primary); }
+        .logo span { color: var(--text); }
+
+        .nav-links { display: flex; gap: 24px; }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: var(--primary); }
+
+        /* ─── HERO ─── */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 120px 6% 80px;
+            position: relative;
+            z-index: 1;
+            background-image: 
+                radial-gradient(circle at center, rgba(255,251,242,0.6) 0%, var(--bg) 90%),
+                url('../assets/hero/pawsync.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .hero h1 {
+            font-family: var(--display);
+            font-size: clamp(3.5rem, 9vw, 6.5rem);
+            font-weight: 900;
+            line-height: 0.95;
+            letter-spacing: -2px;
+            margin-bottom: 24px;
+            animation: bounceIn 1s cubic-bezier(.17,.67,.83,.67) both;
+        }
+        .hero h1 span { color: var(--primary); }
+
+        .hero p {
+            font-size: 1.3rem;
+            max-width: 550px;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+            animation: fadeIn 1s 0.3s both;
+        }
+
+        .btn-play {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 20px 48px;
+            font-family: var(--display);
+            font-weight: 800;
+            font-size: 1rem;
+            border-radius: 50px;
+            cursor: none;
+            box-shadow: 0 10px 40px rgba(255,107,53,0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .btn-play:hover { transform: scale(1.05) rotate(-2deg); box-shadow: 0 15px 50px rgba(255,107,53,0.4); }
+
+        /* ─── WIDGETS ─── */
+        .widgets {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            padding: 80px 6%;
+            position: relative;
+            z-index: 1;
+        }
+        .widget {
+            background: var(--white);
+            padding: 40px;
+            border-radius: 40px;
+            border: 1px solid rgba(0,0,0,0.03);
+            text-align: center;
+            transition: transform 0.4s cubic-bezier(.17,.67,.83,.67);
+        }
+        .widget:hover { transform: scale(1.03) rotate(1deg); }
+        .widget-icon { font-size: 3rem; margin-bottom: 20px; }
+        .widget h3 { font-family: var(--display); font-size: 1.6rem; margin-bottom: 12px; }
+        .widget p { color: var(--text-muted); line-height: 1.6; }
+
+        /* ─── FOOTER ─── */
+        footer { padding: 60px 40px; text-align: center; color: var(--text-muted); font-size: 0.9rem; }
+        footer a { color: var(--primary); text-decoration: none; font-weight: 800; }
+
+        @keyframes bounceIn { from { opacity: 0; transform: scale(0.8) translateY(40px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        @media (max-width: 900px) { .widgets { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<nav>
+    <div class="nav-inner">
+        <div class="logo">PAW<span>SYNC</span></div>
+        <div class="nav-links">
+            <a href="#">Устройства</a>
+            <a href="#">Приложение</a>
+            <a href="#">Забота</a>
+        </div>
+    </div>
+</nav>
+
+<section class="hero">
+    <h1>ВАШИ <span>ДРУЗЬЯ</span> В СЕТИ</h1>
+    <p>Умная экосистема для ваших питомцев. Следите за здоровьем, активностью и питанием в реальном времени.</p>
+    <button class="btn-play">Начать заботу</button>
+</section>
+
+<div class="widgets">
+    <div class="widget">
+        <div class="widget-icon">🐕</div>
+        <h3>Трекинг</h3>
+        <p>GPS-данные о перемещении вашего любимца с точностью до метра.</p>
+    </div>
+    <div class="widget" style="margin-top: 40px;">
+        <div class="widget-icon">🌡️</div>
+        <h3>Биометрия</h3>
+        <p>Контроль температуры, пульса и качества сна во время отдыха.</p>
+    </div>
+    <div class="widget">
+        <div class="widget-icon">🦴</div>
+        <h3>Питание</h3>
+        <p>Автоматическая кормушка с расчетом КБЖУ для идеальной формы.</p>
+    </div>
+</div>
+
+<footer>
+    <p>© 2026 PawSync Systems. Made with love. <a href="../index.html">← Назад</a></p>
+</footer>
+
+<script>
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursor-ring');
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+        ring.style.left = e.clientX + 'px';
+        ring.style.top = e.clientY + 'px';
+    });
+
+    document.querySelectorAll('a, button, .widget').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+            ring.style.width = '100px';
+            ring.style.height = '100px';
+            ring.style.background = 'rgba(255,107,53,0.1)';
+        });
+        el.addEventListener('mouseleave', () => {
+            ring.style.width = '44px';
+            ring.style.height = '44px';
+            ring.style.background = 'transparent';
+        });
+    });
+
+    /* ─── BUBBLE CANVAS ANIMATION ─── */
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let w, h, bubbles = [];
+
+    function resize() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    class Bubble {
+        constructor() {
+            this.init();
+        }
+        init() {
+            this.x = Math.random() * w;
+            this.y = h + Math.random() * 200;
+            this.size = Math.random() * 40 + 20;
+            this.vy = -(Math.random() * 1.5 + 0.5);
+            this.vx = (Math.random() - 0.5) * 1;
+            this.opacity = Math.random() * 0.15 + 0.05;
+        }
+        update() {
+            this.y += this.vy;
+            this.x += this.vx;
+            if (this.y < -50) this.init();
+        }
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255, 107, 53, ${this.opacity})`;
+            ctx.fill();
+        }
+    }
+
+    for (let i = 0; i < 30; i++) bubbles.push(new Bubble());
+
+    function ani() {
+        ctx.clearRect(0,0,w,h);
+        bubbles.forEach(b => {
+            b.update();
+            b.draw();
+        });
+        requestAnimationFrame(ani);
+    }
+    ani();
+</script>
+
+</body>
+</html>

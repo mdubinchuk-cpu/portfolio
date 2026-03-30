@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FloraMagic | Artisan Floristry | v2.0</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #fffbf9;
+            --primary: #9d8189;
+            --secondary: #d8e2dc;
+            --accent: #ffcad4;
+            --text: #4a4e69;
+            --text-muted: #9a8c98;
+            --display: 'Playfair Display', serif;
+            --body: 'Outfit', sans-serif;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--body);
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* ─── CUSTOM CURSOR ─── */
+        #cursor {
+            position: fixed;
+            width: 8px; height: 8px;
+            background: var(--primary);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%,-50%);
+        }
+        #cursor-ring {
+            position: fixed;
+            width: 44px; height: 44px;
+            border: 1px solid var(--primary);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%,-50%);
+            transition: left 0.15s ease-out, top 0.15s ease-out;
+            opacity: 0.3;
+        }
+
+        /* ─── CANVAS BLOOM ─── */
+        #canvas {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        /* ─── NAV ─── */
+        nav {
+            position: fixed;
+            top: 0; width: 100%;
+            z-index: 1000;
+            padding: 30px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo { font-family: var(--display); font-size: 2rem; font-weight: 700; letter-spacing: 1px; color: var(--text); }
+        .logo span { color: var(--primary); }
+
+        .nav-links { display: flex; gap: 40px; }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: var(--primary); }
+
+        /* ─── HERO ─── */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+            background-image: 
+                linear-gradient(rgba(255,251,249,0.5), rgba(255,251,249,0.85)),
+                url('../assets/hero/floramagic.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .hero-inner { max-width: 900px; }
+
+        .hero h1 {
+            font-family: var(--display);
+            font-size: clamp(3.5rem, 10vw, 8rem);
+            font-weight: 400;
+            line-height: 0.95;
+            letter-spacing: -2px;
+            margin-bottom: 32px;
+            animation: moveUp 1.2s cubic-bezier(.16,1,.3,1) both;
+        }
+        .hero h1 i { font-style: italic; color: var(--primary); }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 500px;
+            color: var(--text-muted);
+            margin-bottom: 48px;
+            animation: moveUp 1.2s 0.2s cubic-bezier(.16,1,.3,1) both;
+        }
+
+        .btn-bloom {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 20px 48px;
+            font-family: var(--body);
+            font-size: 0.85rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            cursor: none;
+            transition: all 0.4s;
+            animation: moveUp 1.2s 0.4s cubic-bezier(.16,1,.3,1) both;
+        }
+        .btn-bloom:hover { background: var(--text); transform: translateY(-3px); box-shadow: 0 10px 40px rgba(157,129,137,0.3); }
+
+        /* ─── FEATURE GRID ─── */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: var(--secondary);
+            position: relative;
+            z-index: 1;
+        }
+        .grid-item {
+            background: var(--white);
+            padding: 80px 40px;
+            text-align: center;
+            transition: background 0.4s;
+        }
+        .grid-item:hover { background: var(--secondary); }
+        .grid-item h3 { font-family: var(--display); font-size: 1.8rem; margin-bottom: 15px; }
+        .grid-item p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.8; }
+
+        /* ─── FOOTER ─── */
+        footer { padding: 80px 5%; text-align: center; color: var(--text-muted); font-size: 0.8rem; letter-spacing: 2px; }
+        footer a { color: var(--primary); text-decoration: none; margin-left: 10px; }
+
+        @keyframes moveUp { from { opacity: 0; transform: translateY(50px); } }
+
+        @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<nav>
+    <div class="logo">FLORA<span>MAGIC</span></div>
+    <div class="nav-links">
+        <a href="#">Букеты</a>
+        <a href="#">События</a>
+        <a href="#">Мастер-классы</a>
+    </div>
+</nav>
+
+<section class="hero">
+    <div class="hero-inner">
+        <h1>МАГИЯ <i>ВАШИХ</i><br>ЧУВСТВ</h1>
+        <p>Авторская флористика для тех, кто ценит детали. Каждый букет — это история, рассказанная цветами.</p>
+        <button class="btn-bloom">Выбрать букет</button>
+    </div>
+</section>
+
+<div class="grid">
+    <div class="grid-item">
+        <h3>Креатив</h3>
+        <p>Уникальные композиции, которые вы не встретите ни в одном другом цветочном бутике.</p>
+    </div>
+    <div class="grid-item">
+        <h3>Свежесть</h3>
+        <p>Прямые поставки от лучших фермеров мира каждое утро. Гарантия стойкости 7 дней.</p>
+    </div>
+    <div class="grid-item">
+        <h3>Забота</h3>
+        <p>Деликатная доставка в аквапаках для сохранения идеального вида до самого момента вручения.</p>
+    </div>
+</div>
+
+<footer>
+    <p>© 2026 FloraMagic Studio. Bloom with grace. <a href="../index.html">← Назад</a></p>
+</footer>
+
+<script>
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursor-ring');
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+        ring.style.left = e.clientX + 'px';
+        ring.style.top = e.clientY + 'px';
+    });
+
+    document.querySelectorAll('a, button, .grid-item').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+            ring.style.width = '100px';
+            ring.style.height = '100px';
+            ring.style.borderColor = 'var(--text)';
+            ring.style.background = 'rgba(255,202,212,0.1)';
+        });
+        el.addEventListener('mouseleave', () => {
+            ring.style.width = '44px';
+            ring.style.height = '44px';
+            ring.style.borderColor = 'var(--primary)';
+            ring.style.background = 'transparent';
+        });
+    });
+
+    /* ─── BLOOM CANVAS ANIMATION ─── */
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let w, h, petals = [];
+
+    function resize() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    class Petal {
+        constructor() {
+            this.init();
+        }
+        init() {
+            this.x = Math.random() * w;
+            this.y = Math.random() * h;
+            this.size = Math.random() * 8 + 2;
+            this.alpha = Math.random() * 0.5 + 0.1;
+            this.v = Math.random() * 0.5 + 0.2;
+            this.angle = Math.random() * Math.PI * 2;
+            this.va = (Math.random() - 0.5) * 0.02;
+        }
+        update() {
+            this.x += Math.cos(this.angle) * this.v;
+            this.y += Math.sin(this.angle) * this.v;
+            this.angle += this.va;
+            if (this.x < -20 || this.x > w + 20 || this.y < -20 || this.y > h + 20) this.init();
+        }
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255, 202, 212, ${this.alpha})`;
+            ctx.fill();
+            
+            // Subtle Glow
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = 'rgba(255, 202, 212, 0.5)';
+        }
+    }
+
+    for (let i = 0; i < 50; i++) petals.push(new Petal());
+
+    function ani() {
+        ctx.clearRect(0,0,w,h);
+        ctx.shadowBlur = 0;
+        petals.forEach(p => {
+            p.update();
+            p.draw();
+        });
+        requestAnimationFrame(ani);
+    }
+    ani();
+</script>
+
+</body>
+</html>

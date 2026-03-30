@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlowStudio | Premium Beauty | v2.0</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #fffbf9;
+            --primary: #dca78a;
+            --primary-dim: rgba(220, 167, 138, 0.1);
+            --text: #3a4030;
+            --text-muted: #8d99ae;
+            --gold: #e2b49a;
+            --white: #ffffff;
+            --display: 'Playfair Display', serif;
+            --body: 'Outfit', sans-serif;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--body);
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* ─── CUSTOM CURSOR ─── */
+        #cursor {
+            position: fixed;
+            width: 8px; height: 8px;
+            background: var(--primary);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%,-50%);
+        }
+        #cursor-ring {
+            position: fixed;
+            width: 44px; height: 44px;
+            border: 1px solid var(--primary);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%,-50%);
+            transition: left 0.15s ease-out, top 0.15s ease-out;
+            opacity: 0.3;
+        }
+
+        /* ─── CANVAS SPARKLES ─── */
+        #canvas {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        /* ─── NAV ─── */
+        nav {
+            position: fixed;
+            top: 0; width: 100%;
+            z-index: 1000;
+            padding: 30px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo { font-family: var(--display); font-size: 1.8rem; font-weight: 700; color: var(--text); letter-spacing: 1px; }
+        .logo span { color: var(--primary); }
+
+        .nav-links { display: flex; gap: 40px; }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: var(--primary); }
+
+        /* ─── HERO ─── */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+            background-image: 
+                linear-gradient(rgba(255,251,249,0.5), rgba(255,251,249,0.85)),
+                url('../assets/hero/glowstudio.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .hero-content { max-width: 900px; }
+
+        .tagline {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            color: var(--primary);
+            margin-bottom: 24px;
+            animation: fadeIn 1s both;
+        }
+
+        .hero h1 {
+            font-family: var(--display);
+            font-size: clamp(3.5rem, 9vw, 8rem);
+            font-weight: 400;
+            line-height: 0.95;
+            letter-spacing: -2px;
+            margin-bottom: 32px;
+            animation: moveUp 1.2s cubic-bezier(.16,1,.3,1) both;
+        }
+        .hero h1 i { font-style: italic; color: var(--primary); }
+
+        .btn-glow {
+            background: var(--text);
+            color: var(--white);
+            border: none;
+            padding: 20px 48px;
+            font-family: var(--body);
+            font-size: 0.85rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            cursor: none;
+            transition: all 0.4s;
+            animation: moveUp 1.2s 0.2s cubic-bezier(.16,1,.3,1) both;
+        }
+        .btn-glow:hover { background: var(--primary); transform: translateY(-4px); box-shadow: 0 10px 40px rgba(220,167,138,0.3); }
+
+        /* ─── CARDS ─── */
+        .services {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: var(--primary-dim);
+            position: relative;
+            z-index: 1;
+        }
+        .service {
+            background: var(--white);
+            padding: 80px 40px;
+            text-align: center;
+            transition: background 0.5s;
+        }
+        .service:hover { background: var(--bg); }
+        .service h3 { font-family: var(--display); font-size: 1.8rem; margin-bottom: 15px; }
+        .service p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.8; }
+
+        /* ─── FOOTER ─── */
+        footer { padding: 80px 5%; text-align: center; color: var(--text-muted); font-size: 0.8rem; letter-spacing: 2px; }
+        footer a { color: var(--primary); text-decoration: none; margin-left: 10px; }
+
+        @keyframes moveUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        @media (max-width: 900px) { .services { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<nav>
+    <div class="logo">GLOW<span>STUDIO</span></div>
+    <div class="nav-links">
+        <a href="#">Сервис</a>
+        <a href="#">Мастера</a>
+        <a href="#">Запись</a>
+    </div>
+</nav>
+
+<section class="hero">
+    <div class="hero-content">
+        <p class="tagline">Essence of True Beauty</p>
+        <h1>ВАШЕ <i>ВНУТРЕННЕЕ</i><br>СИЯНИЕ</h1>
+        <button class="btn-glow">Записаться</button>
+    </div>
+</section>
+
+<div class="services">
+    <div class="service">
+        <h3>Уход</h3>
+        <p>Персональные программы восстановления кожи с использованием премиальной косметики.</p>
+    </div>
+    <div class="service">
+        <h3>Эстетика</h3>
+        <p>Искусство макияжа и стиля, подчеркивающее вашу уникальную природную красоту.</p>
+    </div>
+    <div class="service">
+        <h3>Релакс</h3>
+        <p>Спа-процедуры, погружающие в состояние абсолютного спокойствия и гармонии.</p>
+    </div>
+</div>
+
+<footer>
+    <p>© 2026 GlowStudio Premium Beauty. Radiant living. <a href="../index.html">← Назад</a></p>
+</footer>
+
+<script>
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursor-ring');
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+        ring.style.left = e.clientX + 'px';
+        ring.style.top = e.clientY + 'px';
+    });
+
+    document.querySelectorAll('a, button, .service').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+            ring.style.width = '80px';
+            ring.style.height = '80px';
+            ring.style.borderColor = '#000';
+            ring.style.opacity = '0.5';
+        });
+        el.addEventListener('mouseleave', () => {
+            ring.style.width = '44px';
+            ring.style.height = '44px';
+            ring.style.borderColor = 'var(--primary)';
+            ring.style.opacity = '0.3';
+        });
+    });
+
+    /* ─── SPARKLE CANVAS ANIMATION ─── */
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let w, h, sparkles = [];
+
+    function resize() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    class Sparkle {
+        constructor() {
+            this.init();
+        }
+        init() {
+            this.x = Math.random() * w;
+            this.y = Math.random() * h;
+            this.size = Math.random() * 2 + 0.5;
+            this.alpha = Math.random() * 0.6;
+            this.vAlpha = (Math.random() - 0.5) * 0.01;
+        }
+        update() {
+            this.alpha += this.vAlpha;
+            if (this.alpha <= 0 || this.alpha >= 0.8) this.vAlpha *= -1;
+        }
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(220, 167, 138, ${this.alpha})`;
+            ctx.fill();
+        }
+    }
+
+    for (let i = 0; i < 100; i++) sparkles.push(new Sparkle());
+
+    function ani() {
+        ctx.clearRect(0,0,w,h);
+        sparkles.forEach(s => {
+            s.update();
+            s.draw();
+        });
+        requestAnimationFrame(ani);
+    }
+    ani();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrestoPizza | Artisanal Gastronomy | v2.0</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #fffcf9;
+            --primary: #e63946;
+            --secondary: #f4a261;
+            --accent: #2a9d8f;
+            --text: #264653;
+            --white: #ffffff;
+            --display: 'Syne', sans-serif;
+            --body: 'Outfit', sans-serif;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--body);
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* ─── CUSTOM CURSOR ─── */
+        #cursor {
+            position: fixed;
+            width: 8px; height: 8px;
+            background: var(--primary);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%,-50%);
+        }
+        #cursor-ring {
+            position: fixed;
+            width: 44px; height: 44px;
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%,-50%);
+            transition: left 0.1s ease-out, top 0.1s ease-out;
+            opacity: 0.3;
+        }
+
+        /* ─── CANVAS BASIL ─── */
+        #canvas {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ─── NAV ─── */
+        nav {
+            position: fixed;
+            top: 20px; left: 0; right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+        }
+        .nav-inner {
+            background: rgba(255, 252, 249, 0.85);
+            backdrop-filter: blur(15px);
+            padding: 12px 32px;
+            border-radius: 100px;
+            border: 1px solid rgba(230,57,70,0.1);
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            box-shadow: 0 10px 30px rgba(230,57,70,0.05);
+        }
+        .logo { font-family: var(--display); font-size: 1.4rem; font-weight: 800; color: var(--primary); letter-spacing: -1px; }
+        .logo span { color: var(--text); }
+
+        .nav-links { display: flex; gap: 24px; }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text);
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: var(--primary); }
+
+        /* ─── HERO ─── */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 140px 6% 80px;
+            position: relative;
+            z-index: 1;
+            background-image: 
+                radial-gradient(circle at center, transparent 0%, var(--bg) 90%),
+                url('../assets/hero/prestopizza.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .hero::before {
+            content:'';
+            position: absolute; inset:0;
+            background: rgba(255, 252, 249, 0.3);
+        }
+
+        .hero h1 {
+            font-family: var(--display);
+            font-size: clamp(3.5rem, 10vw, 7.5rem);
+            font-weight: 900;
+            line-height: 0.9;
+            letter-spacing: -3px;
+            margin-bottom: 24px;
+            position: relative;
+            animation: popUp 1s cubic-bezier(.17,.67,.83,.67) both;
+        }
+        .hero h1 span { color: var(--primary); }
+
+        .hero p {
+            font-size: 1.4rem;
+            max-width: 600px;
+            color: var(--text);
+            margin-bottom: 40px;
+            position: relative;
+            animation: fadeIn 1s 0.3s both;
+        }
+
+        .btn-pizza {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 22px 52px;
+            font-family: var(--display);
+            font-weight: 900;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-radius: 50px;
+            cursor: none;
+            transition: all 0.3s;
+            position: relative;
+            animation: fadeIn 1s 0.5s both;
+        }
+        .btn-pizza:hover { transform: scale(1.05) rotate(1deg); box-shadow: 0 10px 40px rgba(230,57,70,0.3); }
+
+        /* ─── CARDS ─── */
+        .specials {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            padding: 80px 6%;
+            position: relative;
+            z-index: 1;
+        }
+        .special {
+            background: var(--white);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(0,0,0,0.03);
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+            transition: transform 0.4s;
+        }
+        .special:hover { transform: translateY(-10px); }
+        .special-icon { font-size: 3rem; margin-bottom: 20px; }
+        .special h3 { font-family: var(--display); font-size: 1.8rem; margin-bottom: 12px; }
+        .special p { font-size: 1rem; color: var(--text); opacity: 0.7; }
+
+        /* ─── FOOTER ─── */
+        footer { padding: 80px 5% 40px; text-align: center; color: var(--text); opacity: 0.6; }
+        footer a { color: var(--primary); text-decoration: none; font-weight: 800; }
+
+        @keyframes popUp { from { opacity:0; transform: scale(0.8) translateY(50px); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        @media (max-width: 900px) { .specials { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<nav>
+    <div class="nav-inner">
+        <div class="logo">PRESTO<span>PIZZA</span></div>
+        <div class="nav-links">
+            <a href="#">Меню</a>
+            <a href="#">Доставка</a>
+            <a href="#">Рестораны</a>
+        </div>
+    </div>
+</nav>
+
+<section class="hero">
+    <h1>ЛУЧШАЯ <span>ИТАЛИЯ</span> В ВАШЕМ ГОРОДЕ</h1>
+    <p>Мы готовим пиццу в дровяной печи по рецептам четырех поколений. Только локальные фермерские продукты.</p>
+    <button class="btn-pizza">Заказать сейчас</button>
+</section>
+
+<div class="specials">
+    <div class="special">
+        <div class="special-icon">🍕</div>
+        <h3>Пепперони Плюс</h3>
+        <p>Много острого салями, моцарелла и фирменный соус из вяленых томатов.</p>
+    </div>
+    <div class="special" style="margin-top: 40px;">
+        <div class="special-icon">🧀</div>
+        <h3>Четыре Сыра</h3>
+        <p>Горгонзола, пармезан, моцарелла и чеддер на тонком хрустящем тесте.</p>
+    </div>
+    <div class="special">
+        <div class="special-icon">🌿</div>
+        <h3>Маргарита</h3>
+        <p>Классика с сочными томатами сан-марцано и свежим зеленым базиликом.</p>
+    </div>
+</div>
+
+<footer>
+    <p>© 2026 PrestoPizza Gastronomy. Authentic Taste. <a href="../index.html">← Назад</a></p>
+</footer>
+
+<script>
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursor-ring');
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+        ring.style.left = e.clientX + 'px';
+        ring.style.top = e.clientY + 'px';
+    });
+
+    document.querySelectorAll('a, button, .special').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+            ring.style.width = '100px';
+            ring.style.height = '100px';
+            ring.style.background = 'rgba(230,57,70,0.1)';
+        });
+        el.addEventListener('mouseleave', () => {
+            ring.style.width = '44px';
+            ring.style.height = '44px';
+            ring.style.background = 'transparent';
+        });
+    });
+
+    /* ─── BASIL LEAF CANVAS ANIMATION ─── */
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let w, h, elements = [];
+
+    function resize() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    class Element {
+        constructor() {
+            this.init();
+        }
+        init() {
+            this.x = Math.random() * w;
+            this.y = -50 - Math.random() * h;
+            this.size = Math.random() * 20 + 5;
+            this.vy = Math.random() * 1.2 + 0.4;
+            this.vx = (Math.random() - 0.5) * 1;
+            this.rot = Math.random() * Math.PI * 2;
+            this.rv = (Math.random() - 0.5) * 0.02;
+            this.type = Math.random() > 0.8 ? 'leaf' : 'flour';
+        }
+        update() {
+            this.y += this.vy;
+            this.x += this.vx + Math.sin(this.y * 0.01) * 0.2;
+            this.rot += this.rv;
+            if (this.y > h + 50) this.init();
+        }
+        draw() {
+            ctx.save();
+            ctx.translate(this.x, this.y);
+            ctx.rotate(this.rot);
+            if(this.type === 'leaf') {
+                ctx.beginPath();
+                ctx.ellipse(0, 0, this.size, this.size/1.8, 0, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(42, 157, 143, 0.15)';
+                ctx.fill();
+            } else {
+                ctx.beginPath();
+                ctx.arc(0, 0, this.size/8, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                ctx.fill();
+            }
+            ctx.restore();
+        }
+    }
+
+    for (let i = 0; i < 40; i++) elements.push(new Element());
+
+    function ani() {
+        ctx.clearRect(0,0,w,h);
+        elements.forEach(el => {
+            el.update();
+            el.draw();
+        });
+        requestAnimationFrame(ani);
+    }
+    ani();
+</script>
+
+</body>
+</html>

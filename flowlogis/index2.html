@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlowLogis | Blockchain Logistics | v2.0</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #030712;
+            --primary: #3b82f6;
+            --primary-dim: rgba(59, 130, 246, 0.1);
+            --white: #f9fafb;
+            --dim: rgba(249, 250, 251, 0.45);
+            --grid: rgba(59, 130, 246, 0.05);
+            --mono: 'Share Tech Mono', monospace;
+            --display: 'Syne', sans-serif;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--mono);
+            background: var(--bg);
+            color: var(--white);
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* ─── CUSTOM CURSOR ─── */
+        #cursor {
+            position: fixed;
+            width: 10px; height: 10px;
+            background: var(--primary);
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%,-50%);
+        }
+        #cursor-ring {
+            position: fixed;
+            width: 44px; height: 44px;
+            border: 1px solid var(--primary);
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%,-50%);
+            transition: left 0.12s ease-out, top 0.12s ease-out;
+            opacity: 0.3;
+        }
+
+        /* ─── GRID BG ─── */
+        body::before {
+            content:'';
+            position: fixed; inset:0;
+            background-image:
+                linear-gradient(var(--grid) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events:none;
+            z-index:0;
+        }
+
+        /* ─── CANVAS BLOCKCHAIN ─── */
+        #canvas {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        /* ─── NAV ─── */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 6%;
+            border-bottom: 1px solid var(--primary-dim);
+            background: rgba(3,7,18,0.8);
+            backdrop-filter: blur(16px);
+        }
+        .logo { font-family: var(--display); font-size: 1.5rem; font-weight: 900; letter-spacing: -1px; }
+        .logo span { color: var(--primary); }
+
+        .nav-links { display: flex; gap: 40px; }
+        .nav-links a {
+            color: var(--dim);
+            text-decoration: none;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: var(--primary); }
+
+        /* ─── HERO ─── */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 120px 6% 80px;
+            position: relative;
+            z-index: 1;
+            background-image: 
+                linear-gradient(rgba(3,7,18,0.4) 0%, rgba(3,7,18,0.92) 85%, var(--bg) 100%),
+                url('../assets/hero/flowlogis.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .hero-left { flex: 1; max-width: 700px; }
+
+        .label {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid var(--primary-dim);
+            background: rgba(59, 130, 246, 0.05);
+            padding: 8px 16px;
+            font-size: 0.72rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--primary);
+            margin-bottom: 32px;
+            animation: moveRight 0.8s both;
+        }
+
+        .hero h1 {
+            font-family: var(--display);
+            font-size: clamp(3.5rem, 8vw, 6rem);
+            font-weight: 900;
+            line-height: 0.95;
+            text-transform: uppercase;
+            letter-spacing: -2px;
+            margin-bottom: 32px;
+            animation: moveRight 0.8s 0.2s both;
+        }
+        .hero h1 .stroke {
+            -webkit-text-stroke: 1.5px var(--white);
+            color: transparent;
+        }
+
+        .hero-sub {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--dim);
+            max-width: 450px;
+            margin-bottom: 48px;
+            animation: moveRight 0.8s 0.4s both;
+        }
+
+        .btn-tech {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 20px 48px;
+            font-family: var(--display);
+            font-weight: 800;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: none;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s;
+            animation: moveRight 0.8s 0.6s both;
+        }
+        .btn-tech:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(59, 130, 246, 0.3); }
+
+        /* ─── HUD OVERLAYS ─── */
+        .hud-overlay {
+            position: absolute;
+            right: 6%; top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            animation: moveLeft 1s 0.8s both;
+        }
+        .hud-box {
+            background: rgba(3,7,18,0.7);
+            border: 1px solid var(--primary-dim);
+            backdrop-filter: blur(12px);
+            padding: 24px;
+            width: 300px;
+        }
+        .hud-box h4 { font-size: 0.65rem; color: var(--primary); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 15px; }
+        .data-row { display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 8px; }
+        .data-label { color: var(--dim); }
+        .data-val { color: var(--white); }
+
+        /* ─── FOOTER ─── */
+        footer { padding: 40px 6%; border-top: 1px solid var(--primary-dim); display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--dim); letter-spacing: 2px; text-transform: uppercase; position: relative; z-index: 1; }
+        footer a { color: var(--primary); text-decoration: none; }
+
+        @keyframes moveRight { from { opacity: 0; transform: translateX(-40px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes moveLeft { from { opacity: 0; transform: translateX(40px) translateY(-50%); } to { opacity: 1; transform: translateX(0) translateY(-50%); } }
+
+        @media (max-width: 1000px) { .hud-overlay { display: none; } }
+    </style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<nav>
+    <div class="logo">FLOW<span>LOGIS</span></div>
+    <div class="nav-links">
+        <a href="#">Протокол</a>
+        <a href="#">Сеть</a>
+        <a href="#">Интеграция</a>
+    </div>
+</nav>
+
+<section class="hero">
+    <div class="hero-left">
+        <div class="label">Blockchain-Powered Logistics v2.0</div>
+        <h1>ПРОЗРАЧНОСТЬ <br><span class="stroke">КАЖДОГО</span> ШАГА</h1>
+        <p class="hero-sub">Децентрализованная система отслеживания грузов. Полный контроль, нулевая коррупция, максимальная скорость.</p>
+        <button class="btn-tech">Подключить узел</button>
+    </div>
+
+    <div class="hud-overlay">
+        <div class="hud-box">
+            <h4>NETWORK STATUS</h4>
+            <div class="data-row"><span class="data-label">Nodes Active</span><span class="data-val">4,812</span></div>
+            <div class="data-row"><span class="data-label">Block Time</span><span class="data-val">1.2s</span></div>
+            <div class="data-row"><span class="data-label">TPS</span><span class="data-val">12,400+</span></div>
+        </div>
+        <div class="hud-box">
+            <h4>CORE METRICS</h4>
+            <div class="data-row"><span class="data-label">Deliveries</span><span class="data-val">99.9%</span></div>
+            <div class="data-row"><span class="data-label">Efficiency</span><span class="data-val">Max</span></div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div>© 2026 FlowLogis Protocol</div>
+    <a href="../index.html">← В портфолио</a>
+</footer>
+
+<script>
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursor-ring');
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+        ring.style.left = e.clientX + 'px';
+        ring.style.top = e.clientY + 'px';
+    });
+
+    document.querySelectorAll('a, button').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+            cursor.style.transform = 'translate(-50%,-50%) rotate(45deg) scale(2)';
+            ring.style.borderStyle = 'dashed';
+        });
+        el.addEventListener('mouseleave', () => {
+            cursor.style.transform = 'translate(-50%,-50%) rotate(0deg) scale(1)';
+            ring.style.borderStyle = 'solid';
+        });
+    });
+
+    /* ─── BLOCKCHAIN CANVAS ─── */
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let w, h, blocks = [];
+
+    function resize() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    class Block {
+        constructor() {
+            this.init();
+        }
+        init() {
+            this.x = Math.random() * w;
+            this.y = Math.random() * h;
+            this.size = 30 + Math.random() * 40;
+            this.vx = (Math.random() - 0.5) * 1;
+            this.vy = (Math.random() - 0.5) * 1;
+        }
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            if(this.x < -100 || this.x > w + 100 || this.y < -100 || this.y > h + 100) this.init();
+        }
+        draw() {
+            ctx.strokeStyle = `rgba(59, 130, 246, 0.15)`;
+            ctx.strokeRect(this.x, this.y, this.size, this.size);
+            
+            ctx.beginPath();
+            ctx.moveTo(this.x, this.y);
+            ctx.lineTo(this.x + this.size/3, this.y - this.size/3);
+            ctx.lineTo(this.x + this.size + this.size/3, this.y - this.size/3);
+            ctx.lineTo(this.x + this.size, this.y);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(this.x + this.size, this.y);
+            ctx.lineTo(this.x + this.size + this.size/3, this.y - this.size/3);
+            ctx.lineTo(this.x + this.size + this.size/3, this.y + this.size - this.size/3);
+            ctx.lineTo(this.x + this.size, this.y + this.size);
+            ctx.stroke();
+        }
+    }
+
+    for (let i = 0; i < 20; i++) blocks.push(new Block());
+
+    function ani() {
+        ctx.clearRect(0,0,w,h);
+        blocks.forEach((b, i) => {
+            b.update();
+            b.draw();
+            blocks.forEach((b2, j) => {
+                if(i === j) return;
+                const dist = Math.hypot(b.x - b2.x, b.y - b2.y);
+                if(dist < 200) {
+                    ctx.beginPath();
+                    ctx.moveTo(b.x + b.size/2, b.y + b.size/2);
+                    ctx.lineTo(b2.x + b2.size/2, b2.y + b2.size/2);
+                    ctx.strokeStyle = `rgba(59, 130, 246, ${0.1 * (1 - dist/200)})`;
+                    ctx.stroke();
+                }
+            });
+        });
+        requestAnimationFrame(ani);
+    }
+    ani();
+</script>
+
+</body>
+</html>

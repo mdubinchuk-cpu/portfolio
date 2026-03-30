@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PawSync | Умные гаджеты для питомцев</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #fff5f5;
+            --coral: #ff7f50;
+            --coral-light: #ffe4db;
+            --mint: #98ff98;
+            --mint-dark: #6bd66b;
+            --text-dark: #4a4a4a;
+            --text-bold: #2c2c2c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--bg);
+            background-image: 
+                linear-gradient(rgba(255, 245, 245, 0.8), rgba(255, 245, 245, 0.8)),
+                url('../assets/hero/pawsync.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Fun Background Elements */
+        .decor {
+            position: absolute;
+            z-index: -1;
+            opacity: 0.5;
+        }
+
+        .dog-bone {
+            width: 80px; height: 30px;
+            background: var(--coral-light);
+            border-radius: 20px;
+            top: 20%; left: 10%;
+            transform: rotate(-15deg);
+        }
+
+        .dog-bone::before, .dog-bone::after {
+            content: '';
+            position: absolute;
+            width: 25px; height: 25px;
+            background: inherit;
+            border-radius: 50%;
+        }
+
+        .dog-bone::before { top: -8px; left: -10px; box-shadow: 0 16px 0 var(--coral-light); }
+        .dog-bone::after { top: -8px; right: -10px; box-shadow: 0 16px 0 var(--coral-light); }
+        
+        .paw-print {
+            top: 60%; right: 15%;
+            transform: rotate(25deg);
+        }
+
+        .paw-main {
+            width: 40px; height: 40px;
+            background: var(--mint);
+            border-radius: 40% 40% 50% 50%;
+        }
+        
+        .toe {
+            width: 15px; height: 20px;
+            background: var(--mint);
+            border-radius: 50%;
+            position: absolute;
+        }
+        .t1 { top: -20px; left: -10px; transform: rotate(-30deg); }
+        .t2 { top: -30px; left: 12px; }
+        .t3 { top: -20px; right: -10px; transform: rotate(30deg); }
+
+        /* Nav */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 5%;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--coral);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-links a {
+            color: var(--text-bold);
+            text-decoration: none;
+            font-weight: 700;
+            margin-left: 30px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover { color: var(--coral); }
+        
+        .btn-rounded {
+            background: var(--coral);
+            color: #fff;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(255, 127, 80, 0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin-left: 20px;
+        }
+
+        .btn-rounded:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(255, 127, 80, 0.4);
+            background: #ff6a33;
+        }
+
+        /* Hero */
+        .hero {
+            padding: 80px 10%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+            min-height: 80vh;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 6vw, 4.5rem);
+            font-weight: 900;
+            color: var(--text-bold);
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 span { color: var(--coral); }
+
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 40px;
+        }
+
+        /* Soft Gadget Mockup */
+        .gadget-mockup {
+            background: #fff;
+            border-radius: 40px;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.05);
+            position: relative;
+            animation: float 4s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .screen {
+            background: var(--bg);
+            border-radius: 20px;
+            height: 350px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .card {
+            background: #fff;
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .icon-circle {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+        }
+        
+        .ic-health { background: var(--mint); color: var(--mint-dark); font-size: 1.2rem; }
+        .ic-location { background: var(--coral-light); color: var(--coral); font-size: 1.2rem; }
+
+        .card h4 { font-size: 1rem; color: var(--text-bold); margin-bottom: 2px;}
+        .card p { font-size: 0.8rem; margin: 0; color: #888; }
+
+        footer { text-align: center; margin-top: 50px; font-weight: 700; color: var(--text-bold); }
+        footer a { color: var(--coral); text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="decor dog-bone"></div>
+    <div class="decor paw-print">
+        <div class="toe t1"></div>
+        <div class="toe t2"></div>
+        <div class="toe t3"></div>
+        <div class="paw-main"></div>
+    </div>
+
+    <nav>
+        <div class="logo">PawSync</div>
+        <div class="nav-links">
+            <a href="#">Ошейники</a>
+            <a href="#">Кормушки</a>
+            <button class="btn-rounded">В Магазин</button>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div>
+            <h1>Счастье на <span>каждом</span> шагу</h1>
+            <p>Умные ошейники с GPS и трекером активности для ваших четвероногих друзей. Знайте, где они и как себя чувствуют — прямо в приложении.</p>
+            <button class="btn-rounded">Выбрать гаджет</button>
+        </div>
+        <div class="gadget-mockup">
+            <div style="text-align: center; font-weight: 900; margin-bottom: 10px;">Профиль питомца: Рекс</div>
+            <div class="screen">
+                <div class="card">
+                    <div class="icon-circle ic-health">♥</div>
+                    <div>
+                        <h4>Здоровье (Активность)</h4>
+                        <p>12 400 шагов • Отлично!</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="icon-circle ic-location">📍</div>
+                    <div>
+                        <h4>Геолокация</h4>
+                        <p>Дома (В безопасности)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>🐾 PawSync Global &copy; 2026. <a href="../index.html"> Вернуться к коллекции &rarr;</a></p>
+    </footer>
+</body>
+</html>
