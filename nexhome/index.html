@@ -3,308 +3,307 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexHome | Умный дом будущего</title>
+    <title>NexHome | Smart Ecosystem | v2.0</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+
     <style>
         :root {
-            --bg-light: #f3f4f6;
-            --primary-blue: #3b82f6;
-            --text-dark: #1f2937;
-            --text-muted: #6b7280;
-            --glass-bg: rgba(255, 255, 255, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.8);
+            --bg: #f8f9fa;
+            --primary: #007aff;
+            --text: #1d1d1f;
+            --text-muted: #86868b;
+            --glass: rgba(255, 255, 255, 0.72);
+            --border: rgba(0, 0, 0, 0.08);
+            --display: 'Syne', sans-serif;
+            --body: 'Outfit', sans-serif;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
 
         body {
-            font-family: 'Outfit', sans-serif;
-            background-color: var(--bg-light);
-            background-image: 
-                linear-gradient(rgba(243, 244, 246, 0.8), rgba(243, 244, 246, 0.8)),
-                url('../assets/hero/nexhome.png');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            color: var(--text-dark);
+            font-family: var(--body);
+            background: var(--bg);
+            color: var(--text);
             overflow-x: hidden;
-            line-height: 1.6;
-            min-height: 100vh;
+            cursor: none;
         }
 
-        /* Glassmorphism utility */
-        .glass {
-            background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-        }
-
-        /* Navbar */
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 5%;
+        /* ─── CUSTOM CURSOR ─── */
+        #cursor {
             position: fixed;
-            width: 100%;
-            top: 0;
+            width: 8px; height: 8px;
+            background: var(--text);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%,-50%);
+            transition: transform 0.1s, width 0.3s, height 0.3s;
+        }
+        #cursor-ring {
+            position: fixed;
+            width: 40px; height: 40px;
+            border: 1px solid var(--text);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%,-50%);
+            transition: left 0.15s ease-out, top 0.15s ease-out;
+            opacity: 0.2;
+        }
+
+        /* ─── NAV ─── */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
             z-index: 1000;
-        }
-
-        .nav-container {
-            width: 100%;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
+            padding: 20px;
+        }
+        .nav-inner {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 12px 32px;
+            border-radius: 100px;
+            border: 1px solid var(--border);
+            display: flex;
             align-items: center;
-            padding: 15px 30px;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--text-dark);
-            letter-spacing: -0.5px;
-        }
-
-        .logo span {
-            color: var(--primary-blue);
-        }
-
-        .nav-links {
-            display: flex;
             gap: 40px;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.03);
         }
-
+        .logo { font-family: var(--display); font-weight: 800; font-size: 1.2rem; }
+        .logo span { color: var(--primary); }
+        .nav-links { display: flex; gap: 24px; }
         .nav-links a {
-            color: var(--text-dark);
             text-decoration: none;
+            color: var(--text-muted);
+            font-size: 0.85rem;
             font-weight: 600;
             transition: color 0.3s;
         }
-
-        .nav-links a:hover {
-            color: var(--primary-blue);
+        .nav-links a:hover { color: var(--text); }
+        .btn-mini {
+            background: var(--text);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            text-decoration: none;
+            transition: opacity 0.3s;
         }
+        .btn-mini:hover { opacity: 0.8; }
 
-        .btn-primary {
-            background: var(--primary-blue);
-            color: white;
-            border: none;
-            padding: 12px 28px;
-            border-radius: 100px;
-            font-family: 'Outfit', sans-serif;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
-            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
-        }
-
-        /* Hero Section */
+        /* ─── HERO ─── */
         .hero {
-            padding: 150px 5% 100px;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
-            max-width: 1200px;
-            margin: 0 auto;
+            padding: 180px 6% 100px;
+            background-image: 
+                linear-gradient(rgba(248,249,250,0.5), rgba(248,249,250,0.9)),
+                url('../assets/hero/nexhome.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .pill {
+            background: rgba(0,0,0,0.03);
+            border: 1px solid var(--border);
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 32px;
+            animation: fadeIn 0.8s both;
         }
 
         .hero h1 {
-            font-size: clamp(3rem, 7vw, 6rem);
+            font-family: var(--display);
+            font-size: clamp(3rem, 7vw, 5.5rem);
             font-weight: 800;
             line-height: 1.1;
+            letter-spacing: -2px;
             margin-bottom: 24px;
-            letter-spacing: -0.03em;
-            color: var(--text-dark);
+            max-width: 900px;
+            animation: fadeDown 1s cubic-bezier(.16,1,.3,1) both;
         }
 
         .hero p {
             font-size: 1.25rem;
             color: var(--text-muted);
             max-width: 600px;
-            margin-bottom: 50px;
+            margin-bottom: 48px;
+            animation: fadeUp 1s 0.2s both;
         }
 
-        /* Mock UI / Dashboard */
-        .dashboard-preview {
+        /* ─── DASHBOARD ─── */
+        .dashboard {
             width: 100%;
-            height: 600px;
-            position: relative;
+            max-width: 1100px;
             display: grid;
-            grid-template-columns: 1fr 2fr 1fr;
-            grid-template-rows: 1fr 1fr;
-            gap: 20px;
-            padding: 20px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 40px;
+            animation: fadeUp 1s 0.4s both;
         }
 
         .widget {
-            padding: 30px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            transition: transform 0.3s;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            padding: 32px;
+            border-radius: 28px;
+            border: 1px solid var(--border);
+            text-align: left;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
+        .widget:hover { transform: translateY(-5px); box-shadow: 0 10px 40px rgba(0,0,0,0.04); }
 
-        .widget:hover {
-            transform: translateY(-5px);
-        }
+        .widget-label { color: var(--text-muted); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; margin-bottom: 12px; }
+        .widget-val { font-size: 3rem; font-weight: 800; margin-bottom: 12px; }
 
-        .w-climate {
-            grid-column: 1 / 2;
-            grid-row: 1 / 3;
-        }
-
-        .w-main {
-            grid-column: 2 / 3;
-            grid-row: 1 / 3;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #fff 0%, #f3f4f6 100%);
-        }
-
-        .w-lighting {
-            grid-column: 3 / 4;
-            grid-row: 1 / 2;
-        }
-
-        .w-security {
-            grid-column: 3 / 4;
-            grid-row: 2 / 3;
-        }
-
-        .widget-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--text-muted);
-        }
-
-        .widget-value {
-            font-size: 3.5rem;
-            font-weight: 800;
-            color: var(--text-dark);
-        }
-
-        .toggle-switch {
-            width: 60px;
-            height: 32px;
-            background: var(--primary-blue);
-            border-radius: 30px;
+        .switch-row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+        .switch {
+            width: 52px; height: 31px;
+            background: #e9e9ea;
+            border-radius: 31px;
             position: relative;
-            cursor: pointer;
-            margin-top: 15px;
+            cursor: none;
+            transition: background 0.3s;
         }
-
-        .toggle-switch::after {
+        .switch::after {
             content: '';
             position: absolute;
-            top: 4px;
-            right: 4px;
-            width: 24px;
-            height: 24px;
-            background: white;
+            top: 2px; left: 2px;
+            width: 27px; height: 27px;
+            background: #fff;
             border-radius: 50%;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
         }
+        .switch.on { background: #34c759; }
+        .switch.on::after { transform: translateX(21px); }
 
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--text-muted);
-            margin-top: 100px;
-        }
+        .big-widget { grid-column: span 2; display: flex; align-items: center; justify-content: space-between; }
+        .cur-temp { font-size: 5rem; line-height: 1; }
         
-        footer a {
-            color: var(--primary-blue);
-            text-decoration: none;
-            font-weight: 600;
-        }
+        /* ─── FOOTER ─── */
+        footer { padding: 60px 20px; text-align: center; color: var(--text-muted); font-size: 0.9rem; }
+        footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
         @media (max-width: 900px) {
-            .dashboard-preview {
-                grid-template-columns: 1fr;
-                grid-template-rows: auto;
-                height: auto;
-            }
-            .w-climate, .w-main, .w-lighting, .w-security {
-                grid-column: 1 / -1;
-                grid-row: auto;
-                min-height: 200px;
-            }
-            .nav-links {
-                display: none;
-            }
+            .dashboard { grid-template-columns: 1fr; }
+            .big-widget { grid-column: span 1; }
         }
     </style>
 </head>
 <body>
-    <nav>
-        <div class="nav-container glass">
-            <div class="logo">Nex<span>Home</span></div>
-            <div class="nav-links">
-                <a href="#">Устройства</a>
-                <a href="#">Приложение</a>
-                <a href="#">Поддержка</a>
-            </div>
-            <button class="btn-primary">Купить</button>
-        </div>
-    </nav>
 
-    <section class="hero">
-        <h1>Живите в гармонии<br>с вашим домом</h1>
-        <p>Интеллектуальная экосистема, которая адаптируется под ваши привычки. Управляйте климатом, светом и безопасностью с элегантностью.</p>
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<nav>
+    <div class="nav-inner">
+        <div class="logo">Nex<span>Home</span></div>
+        <div class="nav-links">
+            <a href="#">Устройства</a>
+            <a href="#">Сцены</a>
+            <a href="#">Защита</a>
+        </div>
+        <a href="../index.html" class="btn-mini">Портфолио</a>
+    </div>
+</nav>
+
+<section class="hero">
+    <div class="pill">Smart Architecture v10.4</div>
+    <h1>Гармония вашего дома</h1>
+    <p>Технологии, которые не отвлекают. Интеллектуальный комфорт, настроенный под ваш ритм жизни.</p>
+
+    <div class="dashboard">
+        <div class="widget">
+            <div class="widget-label">Климат-контроль</div>
+            <div class="widget-val">22.4°</div>
+            <div style="font-size: 0.9rem; color: var(--text-muted);">Влажность: 45%</div>
+        </div>
         
-        <div class="dashboard-preview">
-            <div class="widget glass w-climate">
-                <div class="widget-title">Климат</div>
-                <div>
-                    <div class="widget-value">22°C</div>
-                    <p style="color: var(--text-muted);">Идеально<br>Влажность: 45%</p>
-                </div>
+        <div class="widget big-widget">
+            <div>
+                <div class="widget-label">Главная сцена</div>
+                <div class="widget-val" style="font-size: 2.2rem;">Добрый Вечер</div>
+                <div style="color:var(--text-muted); font-size:0.9rem;">8 устройств активно</div>
             </div>
-            <div class="widget glass w-main">
-                <div style="text-align: center;">
-                    <div style="font-size: 5rem; margin-bottom: -10px;">🏠</div>
-                    <h2>Дом под защитой</h2>
-                    <p style="color: var(--text-muted); margin-top: 10px;">Все системы работают штатно</p>
-                </div>
+            <div class="cur-temp">🏠</div>
+        </div>
+
+        <div class="widget">
+            <div class="widget-label">Освещение</div>
+            <div class="switch-row">
+                <span>Гостиная</span>
+                <div class="switch on" onclick="this.classList.toggle('on')"></div>
             </div>
-            <div class="widget glass w-lighting">
-                <div class="widget-title">Освещение</div>
-                <div>
-                    <h3 style="margin-top: 10px;">Гостиная</h3>
-                    <div class="toggle-switch"></div>
-                </div>
-            </div>
-            <div class="widget glass w-security">
-                <div class="widget-title">Безопасность</div>
-                <div>
-                    <h3 style="margin-top: 10px;">Камеры Активны</h3>
-                    <p style="color: var(--text-muted);">Распознано 2 человека</p>
-                </div>
+            <div class="switch-row">
+                <span>Кухня</span>
+                <div class="switch" onclick="this.classList.toggle('on')"></div>
             </div>
         </div>
-    </section>
 
-    <footer>
-        <p>&copy; 2026 NexHome Systems. <a href="../index.html">&larr; Вернуться в портфолио</a></p>
-    </footer>
+        <div class="widget">
+            <div class="widget-label">Безопасность</div>
+            <div class="widget-val" style="font-size: 1.5rem; color: #34c759;">● Активна</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px;">Все двери заперты</div>
+        </div>
+
+        <div class="widget">
+            <div class="widget-label">Энергия</div>
+            <div class="widget-val">1.2 <span style="font-size: 1rem;">кВт/ч</span></div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">Экономия: 12%</div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <p>© 2026 NexHome Ecosystem. Designed for better living. <a href="../index.html">← Назад</a></p>
+</footer>
+
+<script>
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursor-ring');
+    
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+        ring.style.left = e.clientX + 'px';
+        ring.style.top = e.clientY + 'px';
+    });
+
+    document.querySelectorAll('a, button, .switch').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+            cursor.style.transform = 'translate(-50%,-50%) scale(2.5)';
+            cursor.style.background = 'rgba(0,122,255,0.2)';
+            ring.style.opacity = '0.5';
+            ring.style.borderColor = 'var(--primary)';
+        });
+        el.addEventListener('mouseleave', () => {
+            cursor.style.transform = 'translate(-50%,-50%) scale(1)';
+            cursor.style.background = 'var(--text)';
+            ring.style.opacity = '0.2';
+            ring.style.borderColor = 'var(--text)';
+        });
+    });
+</script>
+
 </body>
 </html>

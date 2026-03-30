@@ -3,224 +3,329 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oceanus | Глубоководный Туризм</title>
+    <title>Oceanus | Deep Sea Expedition | v2.0</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Jost:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+
     <style>
         :root {
-            --sea-dark: #001220;
-            --sea-mid: #003049;
-            --sea-light: #48cae4;
-            --text-light: #f8f9fa;
+            --bg: #010811;
+            --primary: #00d4ff;
+            --primary-dim: rgba(0, 212, 255, 0.1);
+            --white: #f0f9ff;
+            --dim: rgba(240, 249, 255, 0.4);
+            --accent: #22d3ee;
+            --display: 'Syne', sans-serif;
+            --body: 'Space Grotesk', sans-serif;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
 
         body {
-            font-family: 'Jost', sans-serif;
-            background-color: var(--sea-dark);
-            color: var(--text-light);
-            line-height: 1.6;
+            font-family: var(--body);
+            background: var(--bg);
+            color: var(--white);
             overflow-x: hidden;
-            perspective: 1px;
-            height: 100vh;
-            overflow-y: auto;
-            overflow-x: hidden;
+            cursor: none;
         }
 
-        /* Ambient Underwater Effects and Hero Image */
-        .ambient-layer {
+        /* ─── CUSTOM CURSOR ─── */
+        #cursor {
             position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            background-image: 
-                linear-gradient(rgba(0, 18, 32, 0.8), rgba(0, 18, 32, 0.9)),
-                url('../assets/hero/oceanus.png');
-            background-size: cover;
-            background-position: center;
-            z-index: -2;
+            width: 8px; height: 8px;
+            background: var(--primary);
+            border-radius: 50%;
             pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%,-50%);
+            box-shadow: 0 0 15px var(--primary);
         }
-
-        .particles {
-            position: absolute;
-            width: 100vw; height: 200vh;
-            background-image: radial-gradient(circle, rgba(200,240,255,0.15) 1px, transparent 1px);
-            background-size: 60px 60px;
-            animation: driftUp 30s infinite linear;
-            z-index: -1;
+        #cursor-ring {
+            position: fixed;
+            width: 44px; height: 44px;
+            border: 1px solid var(--primary);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%,-50%);
+            transition: left 0.12s ease-out, top 0.12s ease-out;
             opacity: 0.3;
         }
 
-        @keyframes driftUp {
-            from { transform: translateY(0); }
-            to { transform: translateY(-50px); }
+        /* ─── CANVAS BUBBLES ─── */
+        #canvas {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
         }
 
-        /* Typography */
-        h1, h2, h3, .logo {
-            font-family: 'Cinzel', serif;
-        }
-
-        /* Navbar */
+        /* ─── NAV ─── */
         nav {
+            position: fixed;
+            top: 0; width: 100%;
+            z-index: 1000;
+            padding: 30px 6%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 30px 10%;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 100;
-            background: linear-gradient(to bottom, rgba(0,18,32,0.9), transparent);
+            background: linear-gradient(to bottom, rgba(1,8,17,0.8), transparent);
         }
+        .logo { font-family: var(--display); font-size: 1.6rem; font-weight: 900; letter-spacing: 2px; }
+        .logo span { color: var(--primary); }
 
-        .logo {
-            font-size: 2rem;
-            letter-spacing: 5px;
-            color: var(--sea-light);
-        }
-
+        .nav-links { display: flex; gap: 40px; }
         .nav-links a {
-            color: var(--text-light);
+            color: var(--dim);
             text-decoration: none;
-            letter-spacing: 2px;
-            font-size: 0.9rem;
-            margin-left: 40px;
+            font-size: 0.8rem;
+            letter-spacing: 3px;
             text-transform: uppercase;
-            transition: color 0.4s;
-            opacity: 0.8;
+            transition: color 0.3s;
         }
-        .nav-links a:hover { color: var(--sea-light); opacity: 1; }
+        .nav-links a:hover { color: var(--primary); }
 
-        /* HERO Section with Parallax */
+        /* ─── HERO ─── */
         .hero {
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
-            justify-content: center;
             align-items: center;
-            flex-direction: column;
-            text-align: center;
+            padding: 120px 6% 80px;
             position: relative;
-            transform-style: preserve-3d;
-            padding: 0 20px;
+            z-index: 1;
+            background-image: 
+                radial-gradient(circle at center, transparent 0%, var(--bg) 95%),
+                url('../assets/hero/oceanus.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
         }
 
         .hero::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(0deg, var(--sea-dark) 0%, transparent 40%);
-            z-index: 1;
+            content:'';
+            position: absolute; inset:0;
+            background: linear-gradient(to bottom, rgba(1,8,17,0.3) 0%, rgba(1,8,17,0.95) 100%);
         }
 
-        .title-group {
-            position: relative;
-            z-index: 2;
-            transform: translateZ(-1px) scale(2);
+        .hero-left { flex: 1; max-width: 750px; position: relative; }
+
+        .depth-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--primary);
+            font-size: 0.75rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+            animation: fadeIn 1s both;
         }
+        .depth-line { width: 40px; height: 1px; background: var(--primary); }
 
         .hero h1 {
-            font-size: clamp(3rem, 10vw, 8rem);
-            font-weight: 400;
-            margin-bottom: 20px;
-            color: var(--sea-light);
-            text-shadow: 0 10px 40px rgba(72, 202, 228, 0.5);
-            letter-spacing: 8px;
+            font-family: var(--display);
+            font-size: clamp(3.5rem, 9vw, 7.5rem);
+            font-weight: 900;
+            line-height: 0.95;
+            text-transform: uppercase;
+            letter-spacing: -3px;
+            margin-bottom: 32px;
+            animation: moveUp 1.2s cubic-bezier(.16,1,.3,1) both;
         }
+        .hero h1 span { color: transparent; -webkit-text-stroke: 1.5px var(--white); }
 
         .hero p {
-            font-size: 1.5rem;
-            font-weight: 300;
-            letter-spacing: 2px;
-            max-width: 600px;
-            margin: 0 auto 50px;
-        }
-
-        .explore-btn {
-            background: transparent;
-            color: var(--sea-light);
-            border: 1px solid var(--sea-light);
-            padding: 15px 40px;
-            font-family: inherit;
-            font-size: 1rem;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: all 0.5s ease;
-            position: relative;
-            overflow: hidden;
-            z-index: 2;
-        }
-
-        .explore-btn:hover {
-            background: rgba(72, 202, 228, 0.1);
-            box-shadow: 0 0 30px rgba(72, 202, 228, 0.4);
-            letter-spacing: 5px;
-        }
-
-        /* Mock Submarine Feature */
-        .content-section {
-            padding: 100px 10%;
-            background: var(--sea-dark);
-            position: relative;
-            z-index: 5;
-            text-align: center;
-        }
-
-        .content-section p {
-            max-width: 800px;
-            margin: 0 auto;
             font-size: 1.1rem;
-            opacity: 0.8;
-            margin-bottom: 40px;
+            line-height: 1.8;
+            color: var(--dim);
+            max-width: 500px;
+            margin-bottom: 48px;
+            animation: moveUp 1.2s 0.2s cubic-bezier(.16,1,.3,1) both;
         }
 
-        footer {
-            text-align: center;
-            padding: 60px;
-            background: #000;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            font-family: 'Cinzel', serif;
-            letter-spacing: 2px;
+        .btn-ocean {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 20px 48px;
+            font-family: var(--display);
+            font-size: 1rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            cursor: none;
+            transition: all 0.4s;
+            animation: moveUp 1.2s 0.4s cubic-bezier(.16,1,.3,1) both;
         }
-        
-        footer a { color: var(--sea-light); text-decoration: none; font-family: 'Jost', sans-serif;}
+        .btn-ocean:hover { background: var(--primary); color: #000; box-shadow: 0 0 30px var(--primary); }
+
+        /* ─── HUD OVERLAYS ─── */
+        .hud {
+            position: absolute;
+            right: 6%; top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            animation: revealHud 1.5s 1s both;
+        }
+        .hud-item {
+            text-align: right;
+            border-right: 1.5px solid var(--primary);
+            padding-right: 20px;
+        }
+        .hud-val { font-family: var(--display); font-size: 2.5rem; line-height: 1; margin-bottom: 6px; }
+        .hud-label { font-size: 0.65rem; color: var(--dim); letter-spacing: 2.5px; text-transform: uppercase; }
+
+        /* ─── FOOTER ─── */
+        footer { padding: 40px 6%; border-top: 1px solid var(--primary-dim); display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--dim); letter-spacing: 2px; text-transform: uppercase; position: relative; z-index: 1; }
+        footer a { color: var(--primary); text-decoration: none; }
+
+        @keyframes moveUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes revealHud { from { opacity: 0; transform: translateX(30px) translateY(-50%); } to { opacity: 1; transform: translateX(0) translateY(-50%); } }
+
+        @media (max-width: 1000px) { .hud { display: none; } }
     </style>
 </head>
 <body>
-    <div class="ambient-layer"></div>
-    <div class="particles"></div>
 
-    <nav>
-        <div class="logo">Oceanus</div>
-        <div class="nav-links">
-            <a href="#">Экспедиции</a>
-            <a href="#">Флот</a>
-            <a href="#">Контакты</a>
+<canvas id="canvas"></canvas>
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<nav>
+    <div class="logo">OCEAN<span>US</span></div>
+    <div class="nav-links">
+        <a href="#">Экспедиции</a>
+        <a href="#">Технологии</a>
+        <a href="#">Забронировать</a>
+    </div>
+</nav>
+
+<section class="hero">
+    <div class="hero-left">
+        <div class="depth-label">
+            <div class="depth-line"></div>
+            EXPLORATION AREA · ZONE-7
         </div>
-    </nav>
+        <h1>В ГЛУБИНУ <span>НЕИЗВЕСТНОГО</span></h1>
+        <p>Уникальные подводные экспедиции на исследовательских субмаринах класса Oceanus. Откройте тайны древних цивилизаций и морских бездн.</p>
+        <button class="btn-ocean">ПОГРУЗИТЬСЯ →</button>
+    </div>
 
-    <section class="hero">
-        <div class="title-group">
-            <h1>Бездна Ждет</h1>
-            <p>Эксклюзивные исследовательские экспедиции к загадкам Марианской Впадины и затонувшим артефактам на премиальных батискафах.</p>
+    <div class="hud">
+        <div class="hud-item">
+            <div class="hud-val" id="depth-val">1,240</div>
+            <div class="hud-label">ГЛУБИНА (МЕТРЫ)</div>
         </div>
-        <button class="explore-btn">Погрузиться</button>
-    </section>
+        <div class="hud-item">
+            <div class="hud-val">04:12</div>
+            <div class="hud-label">СВЯЗЬ С БАЗОЙ</div>
+        </div>
+        <div class="hud-item">
+            <div class="hud-val" style="color: var(--primary);">98%</div>
+            <div class="hud-label">КИСЛОРОД</div>
+        </div>
+    </div>
+</section>
 
-    <section class="content-section">
-        <h2>Роскошь на Глубине 11,000 метров</h2>
-        <br>
-        <p>Наши глубоководные аппараты оснащены прозрачными куполами из акрилового стекла, обеспечивая панорамный обзор на 360 градусов. Прикоснитесь к неизведанным тайнам океанских глубин в абсолютном комфорте.</p>
-    </section>
+<footer>
+    <div>© 2026 Oceanus Explorations</div>
+    <a href="../index.html">← В портфолио</a>
+</footer>
 
-    <footer>
-        <p>&copy; 2026 Oceanus Deep Sea Tourism. Увидимся на дне.<br><br> <a href="../index.html">Возврат к портфолио &rarr;</a></p>
-    </footer>
+<script>
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursor-ring');
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+        ring.style.left = e.clientX + 'px';
+        ring.style.top = e.clientY + 'px';
+    });
+
+    document.querySelectorAll('a, button').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+            ring.style.width = '120px';
+            ring.style.height = '120px';
+            ring.style.background = 'rgba(0, 212, 255, 0.05)';
+            ring.style.animation = 'ping 1.5s infinite';
+        });
+        el.addEventListener('mouseleave', () => {
+            ring.style.width = '44px';
+            ring.style.height = '44px';
+            ring.style.background = 'transparent';
+            ring.style.animation = 'none';
+        });
+    });
+
+    /* ─── BUBBLE CANVAS ANIMATION ─── */
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let w, h, bubbles = [];
+
+    function resize() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    class Bubble {
+        constructor() {
+            this.init();
+        }
+        init() {
+            this.x = Math.random() * w;
+            this.y = h + Math.random() * 200;
+            this.size = Math.random() * 6 + 1;
+            this.vy = -(Math.random() * 1.5 + 0.5);
+            this.vx = (Math.random() - 0.5) * 0.5;
+            this.alpha = Math.random() * 0.4 + 0.1;
+        }
+        update() {
+            this.y += this.vy;
+            this.x += this.vx;
+            if (this.y < -50) this.init();
+        }
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.strokeStyle = `rgba(0, 212, 255, ${this.alpha})`;
+            ctx.stroke();
+        }
+    }
+
+    for (let i = 0; i < 60; i++) bubbles.push(new Bubble());
+
+    function ani() {
+        ctx.clearRect(0,0,w,h);
+        
+        // Ambient Blue Glow
+        const g = ctx.createLinearGradient(0,0,0,h);
+        g.addColorStop(0, 'rgba(0,212,255,0.03)');
+        g.addColorStop(1, 'rgba(0,212,255,0)');
+        ctx.fillStyle = g;
+        ctx.fillRect(0,0,w,h);
+
+        bubbles.forEach(b => {
+            b.update();
+            b.draw();
+        });
+        requestAnimationFrame(ani);
+    }
+    ani();
+
+    /* ─── DEPTH METER UPDATE ─── */
+    let dep = 1240;
+    setInterval(() => {
+        dep += Math.floor(Math.random() * 3) - 1;
+        document.getElementById('depth-val').textContent = dep.toLocaleString();
+    }, 1200);
+</script>
+
 </body>
 </html>

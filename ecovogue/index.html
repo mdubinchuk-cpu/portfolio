@@ -3,217 +3,303 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EcoVogue | Устойчивая Мода</title>
+    <title>EcoVogue | Sustainable Fashion | v2.0</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;0,700;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+
     <style>
         :root {
-            --bg-color: #f4efeb;
-            --text-dark: #3a4030;
-            --olive: #929982;
-            --sand: #e8dbce;
+            --bg: #f5f2ef;
+            --text: #2d3128;
+            --olive: #8a937a;
+            --olive-dim: rgba(138, 147, 122, 0.1);
             --accent: #dca78a;
+            --white: #fffdfb;
+            --display: 'Cormorant Garamond', serif;
+            --body: 'Montserrat', sans-serif;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
 
         body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-dark);
+            font-family: var(--body);
+            background: var(--bg);
+            color: var(--text);
             overflow-x: hidden;
-            line-height: 1.6;
-            transition: background-color 0.5s;
+            cursor: none;
         }
 
-        /* Ambient Blobs */
-        .blob {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(100px);
-            z-index: -1;
-            opacity: 0.6;
-        }
-
-        .blob-1 {
-            top: -10%; left: -10%;
-            width: 500px; height: 500px;
-            background: var(--sand);
-            animation: drift 20s infinite alternate;
-        }
-
-        .blob-2 {
-            bottom: -20%; right: 10%;
-            width: 600px; height: 600px;
-            background: var(--olive);
+        /* ─── TEXTURE OVERLAY ─── */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 9999;
             opacity: 0.3;
-            animation: drift 25s infinite alternate-reverse;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3%3Cfilter id='noise'%3%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3%3C/filter%3%3Crect width='100' height='100' filter='url(%23noise)'/%3%3C/svg%3");
         }
 
-        @keyframes drift {
-            0% { transform: translate(0,0) scale(1); }
-            100% { transform: translate(50px, 100px) scale(1.1); }
+        /* ─── CUSTOM CURSOR ─── */
+        #cursor {
+            position: fixed;
+            width: 8px; height: 8px;
+            background: var(--text);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%,-50%);
+        }
+        #cursor-ring {
+            position: fixed;
+            width: 48px; height: 48px;
+            border: 1px solid var(--olive);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%,-50%);
+            transition: left 0.15s ease-out, top 0.15s ease-out;
+            opacity: 0.3;
         }
 
-        /* Typography */
-        h1, h2, h3, .logo {
-            font-family: 'Cormorant Garamond', serif;
-            font-weight: 500;
+        /* ─── CANVAS ─── */
+        #canvas {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
         }
 
+        /* ─── NAV ─── */
         nav {
+            position: fixed;
+            top: 0; width: 100%;
+            z-index: 100;
+            padding: 40px 6%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 30px 5%;
-            position: relative;
-            z-index: 100;
         }
+        .logo { font-family: var(--display); font-size: 2.2rem; font-weight: 500; letter-spacing: 2px; }
+        .nav-links { display: flex; gap: 40px; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; }
+        .nav-links a { text-decoration: none; color: var(--text); position: relative; transition: color 0.4s; }
+        .nav-links a:hover { color: var(--olive); }
 
-        .logo {
-            font-size: 2.5rem;
-            letter-spacing: 1px;
-            color: var(--text-dark);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 40px;
-            font-size: 0.85rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-
-        .nav-links a {
-            color: var(--text-dark);
-            text-decoration: none;
-            position: relative;
-            transition: color 0.3s;
-        }
-
-        .nav-links a:hover {
-            color: var(--olive);
-        }
-
-        /* Hero with Background Image */
+        /* ─── HERO ─── */
         .hero {
-            min-height: 80vh;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
             padding: 0 20px;
+            position: relative;
+            z-index: 1;
             background-image: 
-                linear-gradient(rgba(244, 239, 235, 0.7), rgba(244, 239, 235, 0.8)),
+                linear-gradient(rgba(245,242,239,0.4), rgba(245,242,239,0.85)),
                 url('../assets/hero/ecovogue.png');
             background-size: cover;
             background-position: center;
+            background-attachment: fixed;
         }
 
         .hero h1 {
-            font-size: clamp(4rem, 10vw, 8rem);
-            line-height: 1;
-            margin-bottom: 20px;
-            letter-spacing: -2px;
+            font-family: var(--display);
+            font-size: clamp(3.5rem, 10vw, 8rem);
+            font-weight: 400;
+            line-height: 0.95;
+            letter-spacing: -3px;
+            margin-bottom: 24px;
+            animation: serifFadeUp 1.5s cubic-bezier(.16,1,.3,1) both;
         }
-
-        .hero h1 i {
-            color: var(--olive);
-            font-style: italic;
-        }
+        .hero h1 i { font-style: italic; color: var(--olive); }
 
         .hero p {
-            max-width: 500px;
             font-size: 1.1rem;
-            color: var(--text-dark);
-            margin-bottom: 40px;
-            opacity: 0.8;
+            max-width: 500px;
+            color: var(--text);
             font-weight: 300;
+            margin-bottom: 48px;
+            opacity: 0.8;
+            animation: fadeIn 1.2s 0.4s both;
         }
 
-        .btn {
-            background-color: var(--text-dark);
-            color: var(--bg-color);
+        .btn-organic {
+            background: var(--text);
+            color: var(--bg);
             border: none;
-            padding: 16px 40px;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 400;
-            font-size: 0.9rem;
+            padding: 20px 44px;
+            font-family: var(--body);
+            font-size: 0.85rem;
+            letter-spacing: 3px;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            border-radius: 100px;
-            cursor: pointer;
-            transition: all 0.4s ease;
-            box-shadow: 0 10px 30px rgba(58, 64, 48, 0.15);
-        }
-
-        .btn:hover {
-            background-color: var(--olive);
-            transform: translateY(-3px);
-            box-shadow: 0 15px 35px rgba(146, 153, 130, 0.3);
-        }
-
-        /* Circular image mock */
-        .nature-circle {
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--sand), var(--olive));
-            margin: 50px auto 0;
+            border-radius: 0;
+            cursor: none;
+            transition: all 0.5s ease;
             position: relative;
-            overflow: hidden;
+        }
+        .btn-organic:hover { background: var(--olive); transform: translateY(-4px); box-shadow: 0 10px 40px rgba(138,147,122,0.2); }
+
+        /* ─── IMAGE GRID ─── */
+        .lookbook {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            padding: 100px 6%;
+            position: relative;
+            z-index: 1;
+        }
+        .look {
+            background: var(--white);
+            padding: 40px;
+            transition: transform 0.6s cubic-bezier(.16,1,.3,1);
+        }
+        .look:hover { transform: scale(1.02); }
+        .look-img-placeholder {
+            width: 100%; height: 500px;
+            background: var(--olive-dim);
+            margin-bottom: 24px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 2rem;
+            font-family: var(--display);
             font-style: italic;
+            font-size: 1.5rem;
+            color: var(--olive);
         }
+        .look h3 { font-family: var(--display); font-size: 2rem; margin-bottom: 10px; }
+        .look p { font-size: 0.9rem; color: var(--olive); letter-spacing: 1px; text-transform: uppercase; }
 
-        footer {
-            text-align: center;
-            padding: 60px 20px;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.85rem;
-            color: var(--text-dark);
-            opacity: 0.7;
-        }
-        
-        footer a {
-            color: var(--text-dark);
-            text-decoration: underline;
-        }
+        /* ─── FOOTER ─── */
+        footer { padding: 100px 5% 50px; text-align: center; color: var(--olive); font-size: 0.8rem; letter-spacing: 2px; position: relative; z-index: 1; }
+        footer a { color: var(--text); text-decoration: underline; margin-left: 10px; }
+
+        @keyframes serifFadeUp { from { opacity: 0; transform: translateY(60px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        @media (max-width: 900px) { .lookbook { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
-    <div class="blob blob-1"></div>
-    <div class="blob blob-2"></div>
 
-    <nav>
-        <div class="logo">EcoVogue</div>
-        <div class="nav-links">
-            <a href="#">Коллекция</a>
-            <a href="#">Философия</a>
-            <a href="#">Материалы</a>
-        </div>
-    </nav>
+<canvas id="canvas"></canvas>
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
 
-    <section class="hero">
-        <h1>Этика <i>&</i> Эстетика</h1>
-        <p>Создаем моду будущего. Одежда из переработанных органических материалов, которая уважает природу и подчеркивает вашу индивидуальность.</p>
-        <button class="btn">Изучить Каталог</button>
-        <div class="nature-circle">Природа внутри</div>
-    </section>
+<nav>
+    <div class="logo">ECOVOGUE</div>
+    <div class="nav-links">
+        <a href="#">Коллекции</a>
+        <a href="#">Миссия</a>
+        <a href="#">Материалы</a>
+    </div>
+</nav>
 
-    <footer>
-        <p>&copy; 2026 EcoVogue Apparel. <a href="../index.html"> Вернуться в портфолио</a></p>
-    </footer>
+<section class="hero">
+    <h1>ЧИСТАЯ <i>Эстетика</i><br>БУДУЩЕГО</h1>
+    <p>Мода, которая заботится. Стиль, который длится вечно. Новое слово в устойчивом развитии.</p>
+    <button class="btn-organic">Исследовать мир</button>
+</section>
+
+<div class="lookbook">
+    <div class="look">
+        <div class="look-img-placeholder">Organic Cotton v.1</div>
+        <h3>Этика Мыслей</h3>
+        <p>Коллекция Summer ‘26</p>
+    </div>
+    <div class="look" style="margin-top: 60px;">
+        <div class="look-img-placeholder">Recycled Silk v.2</div>
+        <h3>Сила Природы</h3>
+        <p>Лимитированная серия</p>
+    </div>
+</div>
+
+<footer>
+    <p>© 2026 EcoVogue Apparel. Conscious Fashion. <a href="../index.html">← Назад</a></p>
+</footer>
+
+<script>
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursor-ring');
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+        ring.style.left = e.clientX + 'px';
+        ring.style.top = e.clientY + 'px';
+    });
+
+    document.querySelectorAll('a, button, .look').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+            ring.style.width = '100px';
+            ring.style.height = '100px';
+            ring.style.background = 'rgba(138,147,122,0.08)';
+        });
+        el.addEventListener('mouseleave', () => {
+            ring.style.width = '48px';
+            ring.style.height = '48px';
+            ring.style.background = 'transparent';
+        });
+    });
+
+    /* ─── LEAF ANIMATION CANVAS ─── */
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let w, h, leafs = [];
+
+    function resize() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    class Leaf {
+        constructor() {
+            this.init();
+        }
+        init() {
+            this.x = Math.random() * w;
+            this.y = -50 - Math.random() * h;
+            this.size = Math.random() * 30 + 10;
+            this.vx = (Math.random() - 0.5) * 1.5;
+            this.vy = Math.random() * 1.5 + 0.5;
+            this.rotation = Math.random() * Math.PI * 2;
+            this.rv = (Math.random() - 0.5) * 0.02;
+            this.alpha = Math.random() * 0.4 + 0.1;
+        }
+        update() {
+            this.x += this.vx + Math.sin(Date.now() * 0.001) * 0.5;
+            this.y += this.vy;
+            this.rotation += this.rv;
+            if (this.y > h + 50) this.init();
+        }
+        draw() {
+            ctx.save();
+            ctx.translate(this.x, this.y);
+            ctx.rotate(this.rotation);
+            ctx.beginPath();
+            ctx.ellipse(0, 0, this.size, this.size/2.5, 0, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(138, 147, 122, ${this.alpha})`;
+            ctx.fill();
+            ctx.restore();
+        }
+    }
+
+    for (let i = 0; i < 40; i++) leafs.push(new Leaf());
+
+    function ani() {
+        ctx.clearRect(0,0,w,h);
+        leafs.forEach(l => {
+            l.update();
+            l.draw();
+        });
+        requestAnimationFrame(ani);
+    }
+    ani();
+</script>
+
 </body>
 </html>

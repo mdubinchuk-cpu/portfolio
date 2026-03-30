@@ -3,261 +3,339 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ApexArena | Киберспортивная Платформа</title>
+    <title>ApexArena | Next-Gen Esports | v2.0</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@500;700&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+
     <style>
         :root {
-            --bg-color: #0b0b0b;
-            --primary: #e60000;
-            --primary-dark: #990000;
-            --text-light: #f0f0f0;
-            --gray-dark: #1f1f1f;
+            --bg: #0a0a0c;
+            --primary: #39ff14;
+            --primary-dim: rgba(57, 255, 20, 0.1);
+            --white: #ffffff;
+            --dim: rgba(255, 255, 255, 0.4);
+            --grid: rgba(57, 255, 20, 0.08);
+            --display: 'Syne', sans-serif;
+            --mono: 'Share Tech Mono', monospace;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
 
         body {
-            font-family: 'Rajdhani', sans-serif;
-            background-color: var(--bg-color);
-            background-image: 
-                linear-gradient(rgba(11, 11, 11, 0.8), rgba(11, 11, 11, 0.8)),
-                url('../assets/hero/apexarena.png'),
-                linear-gradient(rgba(230,0,0,0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(230,0,0,0.05) 1px, transparent 1px);
-            background-size: cover, cover, 40px 40px, 40px 40px;
-            background-position: center;
-            background-attachment: fixed;
-            color: var(--text-light);
+            font-family: var(--mono);
+            background: var(--bg);
+            color: var(--white);
             overflow-x: hidden;
+            cursor: none;
         }
 
-        /* Glitch Effect Utility */
-        .glitch {
-            position: relative;
-            display: inline-block;
+        /* ─── CUSTOM CURSOR ─── */
+        #cursor {
+            position: fixed;
+            width: 8px; height: 8px;
+            background: var(--primary);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%,-50%);
+            box-shadow: 0 0 15px var(--primary);
+        }
+        #cursor-ring {
+            position: fixed;
+            width: 44px; height: 44px;
+            border: 1px solid var(--primary);
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%,-50%);
+            transition: left 0.1s, top 0.1s;
         }
 
-        .glitch::before, .glitch::after {
-            content: attr(data-text);
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: var(--bg-color);
+        /* ─── GRID BG ─── */
+        body::before {
+            content:'';
+            position: fixed; inset:0;
+            background-image:
+                linear-gradient(var(--grid) 1.5px, transparent 1.5px),
+                linear-gradient(90deg, var(--grid) 1.5px, transparent 1.5px);
+            background-size: 50px 50px;
+            pointer-events:none;
+            z-index:0;
         }
 
-        .glitch::before {
-            left: 2px;
-            text-shadow: -2px 0 red;
-            clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
-            animation: glitch-anim 2s infinite linear alternate-reverse;
+        /* ─── CANVAS NEON PARTICLES ─── */
+        #canvas {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.5;
         }
 
-        .glitch::after {
-            left: -2px;
-            text-shadow: -2px 0 blue;
-            clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
-            animation: glitch-anim2 3s infinite linear alternate-reverse;
-        }
-
-        @keyframes glitch-anim {
-            0% { clip-path: inset(20% 0 80% 0); transform: translate(2px, 2px); }
-            20% { clip-path: inset(60% 0 10% 0); transform: translate(-2px, -2px); }
-            40% { clip-path: inset(40% 0 50% 0); transform: translate(2px, -2px); }
-            60% { clip-path: inset(80% 0 5% 0); transform: translate(-2px, 2px); }
-            80% { clip-path: inset(10% 0 70% 0); transform: translate(2px, 2px); }
-            100% { clip-path: inset(30% 0 50% 0); transform: translate(-2px, -2px); }
-        }
-
-        @keyframes glitch-anim2 {
-            0% { clip-path: inset(10% 0 60% 0); transform: translate(-2px, 2px); }
-            20% { clip-path: inset(80% 0 5% 0); transform: translate(2px, -2px); }
-            40% { clip-path: inset(30% 0 50% 0); transform: translate(-2px, -2px); }
-            60% { clip-path: inset(50% 0 30% 0); transform: translate(2px, 2px); }
-            80% { clip-path: inset(5% 0 80% 0); transform: translate(-2px, 2px); }
-            100% { clip-path: inset(60% 0 10% 0); transform: translate(2px, -2px); }
-        }
-
-        /* Typography */
-        h1, h2, .logo {
-            font-family: 'Teko', sans-serif;
-            text-transform: uppercase;
-        }
-
-        /* Nav */
-        header {
+        /* ─── NAV ─── */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 5%;
-            border-bottom: 2px solid var(--primary-dark);
-            background: rgba(11, 11, 11, 0.9);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
+            padding: 30px 6%;
+            background: linear-gradient(to bottom, rgba(10,10,12,0.9), transparent);
         }
+        .logo { font-family: var(--display); font-size: 1.8rem; font-weight: 900; letter-spacing: -1px; }
+        .logo span { color: var(--primary); -webkit-text-stroke: 1px var(--primary); -webkit-text-fill-color: transparent; }
 
-        .logo {
-            font-size: 2.5rem;
-            color: var(--primary);
-            letter-spacing: 2px;
-            line-height: 1;
-        }
-
+        .nav-links { display: flex; gap: 40px; }
         .nav-links a {
-            color: var(--text-light);
+            color: var(--dim);
             text-decoration: none;
-            font-weight: 700;
-            font-size: 1.1rem;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
             text-transform: uppercase;
-            margin-left: 30px;
             transition: color 0.3s;
         }
         .nav-links a:hover { color: var(--primary); }
 
-        /* Hero */
+        /* ─── HERO ─── */
         .hero {
-            padding: 150px 5% 80px;
+            min-height: 100vh;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            min-height: 100vh;
+            padding: 120px 6% 80px;
             position: relative;
+            z-index: 1;
+            background-image: 
+                linear-gradient(rgba(10,10,12,0.4) 0%, rgba(10,10,12,0.95) 85%, var(--bg) 100%),
+                url('../assets/hero/apexarena.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
         }
 
-        /* Slanted Background Shape */
-        .hero::before {
-            content: '';
-            position: absolute;
-            right: 0; top: 0;
-            height: 100%; width: 50%;
+        .hero-left { flex: 1; max-width: 800px; }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
             background: var(--primary);
-            clip-path: polygon(20% 0, 100% 0, 100% 100%, 0 100%);
-            z-index: -1;
-            opacity: 0.1;
-        }
-
-        .hero-content {
-            max-width: 600px;
+            color: #000;
+            padding: 6px 14px;
+            font-size: 0.72rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 32px;
+            animation: glitchFade 0.8s both;
         }
 
         .hero h1 {
-            font-size: clamp(5rem, 10vw, 8rem);
+            font-family: var(--display);
+            font-size: clamp(3.5rem, 10vw, 8rem);
+            font-weight: 900;
             line-height: 0.9;
-            margin-bottom: 20px;
-            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: -4px;
+            margin-bottom: 32px;
+            animation: revealUp 0.8s 0.2s both;
+        }
+        .hero h1 .glitch { display: block; position: relative; }
+        .hero h1 .glitch::after {
+            content: 'ARENA';
+            position: absolute;
+            left: 2px; top: 0;
+            width: 100%; height: 100%;
+            -webkit-text-stroke: 1px var(--primary);
+            color: transparent;
+            opacity: 0.4;
+            animation: glitchMove 2s infinite linear alternate-reverse;
         }
 
         .hero p {
-            font-size: 1.25rem;
-            color: #ccc;
-            margin-bottom: 40px;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--dim);
+            max-width: 500px;
+            margin-bottom: 48px;
+            animation: revealUp 0.8s 0.4s both;
         }
 
-        .btn-gamer {
+        .btn-apex {
             background: transparent;
-            color: #fff;
-            border: 2px solid var(--primary);
-            padding: 15px 40px;
-            font-family: 'Teko', sans-serif;
-            font-size: 1.8rem;
-            text-transform: uppercase;
-            cursor: pointer;
-            position: relative;
-            transition: all 0.3s;
-            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
-        }
-
-        .btn-gamer::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--primary);
-            z-index: -1;
-            transition: transform 0.3s;
-            transform: scaleX(0);
-            transform-origin: left;
-        }
-
-        .btn-gamer:hover::before { transform: scaleX(1); }
-        .btn-gamer:hover { color: #fff; box-shadow: 0 0 20px var(--primary); }
-
-        /* Mock Stats/Leaderboard */
-        .leaderboard {
-            flex: 1;
-            max-width: 400px;
-            background: var(--gray-dark);
-            border: 1px solid var(--primary-dark);
-            padding: 30px;
-            box-shadow: 10px 10px 0 rgba(230,0,0,0.2);
-            transform: perspective(1000px) rotateY(-15deg);
-        }
-
-        .leaderboard h3 {
-            font-family: 'Teko', sans-serif;
-            font-size: 2.5rem;
             color: var(--primary);
-            margin-bottom: 20px;
-            border-bottom: 1px solid #333;
-            padding-bottom: 10px;
+            border: 2px solid var(--primary);
+            padding: 24px 52px;
+            font-family: var(--display);
+            font-weight: 900;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: none;
+            transition: all 0.4s cubic-bezier(.16,1,.3,1);
+            position: relative;
+            overflow: hidden;
+            animation: revealUp 0.8s 0.6s both;
         }
+        .btn-apex:hover { background: var(--primary); color: #000; box-shadow: 0 0 50px var(--primary); }
 
-        .player-row {
+        /* ─── HUD OVERLAYS ─── */
+        .hud {
+            position: absolute;
+            right: 6%; top: 50%;
+            transform: translateY(-50%);
             display: flex;
-            justify-content: space-between;
-            padding: 15px 0;
-            border-bottom: 1px solid #222;
-            font-weight: 600;
+            flex-direction: column;
+            gap: 30px;
+            animation: revealRight 1s 0.8s both;
         }
+        .hud-item {
+            border: 1px solid var(--primary-dim);
+            background: rgba(10,10,12,0.8);
+            backdrop-filter: blur(10px);
+            padding: 24px;
+            width: 320px;
+            position: relative;
+        }
+        .hud-item::before { content:''; position: absolute; left: 0; top: 0; width: 4px; height: 100%; background: var(--primary); }
+        .hud-title { font-size: 0.65rem; color: var(--primary); letter-spacing: 4px; text-transform: uppercase; margin-bottom: 20px; }
 
-        .player-row:hover { color: var(--primary); }
-        .top-1 { color: #ffd700; }
+        .kill-feed { font-size: 0.75rem; color: var(--dim); }
+        .feed-row { display: flex; justify-content: space-between; margin-bottom: 10px; }
+        .feed-row span { color: var(--primary); }
 
-        footer { text-align: center; padding: 40px; font-weight: 600; border-top: 1px solid var(--gray-dark); }
+        /* ─── FOOTER ─── */
+        footer { padding: 40px 6%; border-top: 1px solid var(--primary-dim); display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--dim); letter-spacing: 2px; text-transform: uppercase; position: relative; z-index: 1; }
         footer a { color: var(--primary); text-decoration: none; }
+
+        @keyframes revealUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes revealRight { from { opacity: 0; transform: translateX(50px) translateY(-50%); } to { opacity: 1; transform: translateX(0) translateY(-50%); } }
+        @keyframes glitchFade { 0% { opacity:0; } 100% { opacity:1; } }
+        @keyframes glitchMove { 0% { transform: translate(0); } 100% { transform: translate(4px, -2px); } }
+
+        @media (max-width: 1100px) { .hud { display: none; } }
     </style>
 </head>
 <body>
-    <header>
-        <div class="logo glitch" data-text="ApexArena">ApexArena</div>
-        <div class="nav-links">
-            <a href="#">Турниры</a>
-            <a href="#">Команды</a>
-            <a href="#">Трансляции</a>
-        </div>
-    </header>
 
-    <section class="hero">
-        <div class="hero-content">
-            <h1 class="glitch" data-text="BATTLE FOR GLORY">BATTLE FOR GLORY</h1>
-            <p>Премиальная экосистема для профессиональных геймеров. Участвуй в турнирах, собирай команду и выигрывай миллионы в глобальной лиге.</p>
-            <button class="btn-gamer">Вступить в бой</button>
-        </div>
+<canvas id="canvas"></canvas>
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
 
-        <div class="leaderboard">
-            <h3>ТОП ИГРОКОВ (GLOBAL)</h3>
-            <div class="player-row top-1">
-                <span>1. SHADOW_KILLER</span> <span>9982 LP</span>
-            </div>
-            <div class="player-row">
-                <span>2. NEON_GHOST</span> <span>9540 LP</span>
-            </div>
-            <div class="player-row">
-                <span>3. VOID_WALKER</span> <span>9120 LP</span>
-            </div>
-            <div class="player-row" style="border:none;">
-                <span>4. ZERO_COOL</span> <span>8990 LP</span>
+<nav>
+    <div class="logo">APEX<span>ARENA</span></div>
+    <div class="nav-links">
+        <a href="#">Турниры</a>
+        <a href="#">Команды</a>
+        <a href="#">Трансляции</a>
+    </div>
+</nav>
+
+<section class="hero">
+    <div class="hero-left">
+        <div class="badge">SEASON 09 OPEN</div>
+        <h1>ДОМИНИРУЙ<br>В ЭТОЙ <span class="glitch">АРЕНЕ</span></h1>
+        <p>Крупнейшая киберспортивная платформа Европы. Вступай в битву, создавай команды и выигрывай миллионы в прямом эфире.</p>
+        <button class="btn-apex">Вступить в игру</button>
+    </div>
+
+    <div class="hud">
+        <div class="hud-item">
+            <div class="hud-title">LIVE FEED</div>
+            <div class="kill-feed">
+                <div class="feed-row"><span>User_742</span> joined lobby</div>
+                <div class="feed-row"><span>Gamer_X</span> vs <span>Pro_Bot</span></div>
+                <div class="feed-row"><span>Apex_Team</span> registered</div>
             </div>
         </div>
-    </section>
+        <div class="hud-item">
+            <div class="hud-title">POOL PRIZE</div>
+            <div style="font-size: 2.2rem; font-weight: 900; font-family:var(--display);">$1,480,000</div>
+        </div>
+    </div>
+</section>
 
-    <footer>
-        <p>&copy; 2026 ApexArena Esports. <a href="../index.html"> Вернуться к портфолио &rarr;</a></p>
-    </footer>
+<footer>
+    <div>© 2026 ApexArena League</div>
+    <a href="../index.html">← В портфолио</a>
+</footer>
+
+<script>
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursor-ring');
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+        ring.style.left = e.clientX + 'px';
+        ring.style.top = e.clientY + 'px';
+    });
+
+    document.querySelectorAll('a, button').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+            ring.style.width = '80px';
+            ring.style.height = '80px';
+            ring.style.background = 'rgba(57, 255, 20, 0.1)';
+        });
+        el.addEventListener('mouseleave', () => {
+            ring.style.width = '44px';
+            ring.style.height = '44px';
+            ring.style.background = 'transparent';
+        });
+    });
+
+    /* ─── NEON SHARDS CANVAS ─── */
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let w, h, shards = [];
+
+    function resize() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    class Shard {
+        constructor() {
+            this.init();
+        }
+        init() {
+            this.x = Math.random() * w;
+            this.y = Math.random() * h;
+            this.size = Math.random() * 4 + 1;
+            this.vy = (Math.random() - 0.5) * 2;
+            this.vx = (Math.random() - 0.5) * 5;
+            this.alpha = Math.random() * 0.8 + 0.2;
+        }
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            if(this.x < 0 || this.x > w || this.y < 0 || this.y > h) this.init();
+        }
+        draw() {
+            ctx.beginPath();
+            ctx.moveTo(this.x, this.y);
+            ctx.lineTo(this.x + this.vx * 10, this.y + this.vy * 10);
+            ctx.strokeStyle = `rgba(57, 255, 20, ${this.alpha})`;
+            ctx.lineWidth = this.size;
+            ctx.stroke();
+        }
+    }
+
+    for (let i = 0; i < 50; i++) shards.push(new Shard());
+
+    function ani() {
+        ctx.fillStyle = 'rgba(10, 10, 12, 0.2)';
+        ctx.fillRect(0, 0, w, h);
+        shards.forEach(s => {
+            s.update();
+            s.draw();
+        });
+        requestAnimationFrame(ani);
+    }
+    ani();
+</script>
+
 </body>
 </html>
