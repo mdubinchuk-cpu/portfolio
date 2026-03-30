@@ -1,477 +1,910 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CyberGuard | AI-Security | v2.0</title>
+    <title>CyberGuard | AI-Powered Security Platform</title>
+    <meta name="description" content="Интеллектуальная система кибербезопасности нового поколения. Защита данных на базе ИИ в реальном времени.">
+    
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        bg: '#050505',
+                        'bg-elevated': '#0a0a0a',
+                        'bg-card': 'rgba(255,255,255,0.03)',
+                        cyan: {
+                            DEFAULT: '#00f0ff',
+                            dim: 'rgba(0,240,255,0.15)',
+                            glow: 'rgba(0,240,255,0.4)',
+                        },
+                        purple: {
+                            DEFAULT: '#a855f7',
+                            dim: 'rgba(168,85,247,0.15)',
+                        },
+                        danger: '#ff0055',
+                        'text-primary': '#f0f2ff',
+                        'text-secondary': 'rgba(240,242,255,0.55)',
+                        'text-dim': 'rgba(240,242,255,0.35)',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                        'hero-glow': 'radial-gradient(ellipse at center, rgba(0,240,255,0.08) 0%, transparent 70%)',
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'glitch': 'glitch 3s linear infinite',
+                        'scan': 'scan 2s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        glitch: {
+                            '0%': { transform: 'translate(0)' },
+                            '20%': { transform: 'translate(-2px, 2px)' },
+                            '40%': { transform: 'translate(-2px, -2px)' },
+                            '60%': { transform: 'translate(2px, 2px)' },
+                            '80%': { transform: 'translate(2px, -2px)' },
+                            '100%': { transform: 'translate(0)' },
+                        },
+                        scan: {
+                            '0%': { top: '0%' },
+                            '100%': { top: '100%' },
+                        },
+                    },
+                },
+            },
+        }
+    </script>
 
     <style>
-        :root {
-            --bg: #05050a;
-            --neon: #00f0ff;
-            --neon-dim: rgba(0, 240, 255, 0.2);
-            --danger: #ff0055;
-            --white: #f0f2ff;
-            --dim: rgba(240,242,255,0.45);
-            --grid: rgba(0,240,255,0.06);
-            --mono: 'Space Mono', monospace;
-            --display: 'Syne', sans-serif;
-        }
-
-        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+        /* Base */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
-
+        
         body {
-            background: var(--bg);
-            color: var(--white);
-            font-family: var(--mono);
+            background: #050505;
+            color: #f0f2ff;
+            font-family: 'Inter', sans-serif;
             overflow-x: hidden;
             cursor: none;
         }
 
-        /* ─── CUSTOM CURSOR ─── */
-        #cursor {
+        /* Noise texture overlay */
+        .noise-overlay::before {
+            content: '';
             position: fixed;
-            width: 8px; height: 8px;
-            background: var(--neon);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-            transform: translate(-50%,-50%);
-            transition: transform 0.08s, width 0.2s, height 0.2s;
-        }
-        #cursor-ring {
-            position: fixed;
-            width: 40px; height: 40px;
-            border: 1px solid var(--neon);
-            border-radius: 50%;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.03;
             pointer-events: none;
             z-index: 9998;
-            transform: translate(-50%,-50%);
-            transition: left 0.1s ease, top 0.1s ease;
-            opacity: 0.5;
         }
-        #cursor-ring::before, #cursor-ring::after {
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: rgba(0,240,255,0.3); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(0,240,255,0.6); }
+
+        /* Selection */
+        ::selection { background: rgba(0,240,255,0.3); color: #fff; }
+
+        /* Glassmorphism card */
+        .glass-card {
+            background: rgba(255,255,255,0.02);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.06);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card:hover {
+            border-color: rgba(0,240,255,0.3);
+            background: rgba(255,255,255,0.04);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 30px rgba(0,240,255,0.1);
+        }
+
+        /* Neon glow text */
+        .neon-text {
+            text-shadow: 0 0 20px rgba(0,240,255,0.5), 0 0 40px rgba(0,240,255,0.2);
+        }
+
+        /* Gradient border */
+        .gradient-border {
+            position: relative;
+            background: linear-gradient(#050505, #050505) padding-box,
+                        linear-gradient(135deg, #00f0ff, #a855f7) border-box;
+            border: 1px solid transparent;
+        }
+
+        /* Scanline effect */
+        .scanline {
+            position: relative;
+            overflow: hidden;
+        }
+        .scanline::after {
             content: '';
             position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%,-50%);
-            background: var(--neon);
-        }
-        #cursor-ring::before { width: 100%; height: 1px; opacity: 0.3; }
-        #cursor-ring::after { height: 100%; width: 1px; opacity: 0.3; }
-
-        /* ─── GRID BG ─── */
-        body::before {
-            content:'';
-            position: fixed; inset:0;
-            background-image:
-                linear-gradient(var(--grid) 1px, transparent 1px),
-                linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-            background-size: 50px 50px;
-            pointer-events:none;
-            z-index:0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(0,240,255,0.6), transparent);
+            animation: scan 3s linear infinite;
         }
 
-        /* ─── CANVAS DATA STREAM ─── */
-        #dataStream {
-            position: fixed;
-            inset:0;
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0.4;
-        }
-
-        /* ─── NAV ─── */
-        nav {
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            z-index: 100;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 24px 6%;
-            border-bottom: 1px solid var(--neon-dim);
-            background: rgba(5,5,10,0.8);
-            backdrop-filter: blur(12px);
-        }
-
-        .logo {
-            font-family: var(--display);
-            font-size: 1.5rem;
-            font-weight: 800;
-            letter-spacing: 1px;
-            color: var(--white);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .logo span { color: var(--neon); }
-        .logo-icon {
-            width: 30px; height: 30px;
-            border: 2px solid var(--neon);
+        /* Glitch effect */
+        .glitch-text {
             position: relative;
-            animation: rotateLogo 8s linear infinite;
         }
-        @keyframes rotateLogo { to { transform: rotate(360deg); } }
-
-        .nav-links { display: flex; gap: 32px; }
-        .nav-links a {
-            color: var(--dim);
-            text-decoration: none;
-            font-size: 0.75rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            transition: color 0.3s;
+        .glitch-text::before,
+        .glitch-text::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
         }
-        .nav-links a:hover { color: var(--neon); }
+        .glitch-text::before {
+            color: #00f0ff;
+            animation: glitch 3s infinite;
+            clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+            transform: translate(-2px);
+            opacity: 0.7;
+        }
+        .glitch-text::after {
+            color: #a855f7;
+            animation: glitch 2s infinite reverse;
+            clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+            transform: translate(2px);
+            opacity: 0.7;
+        }
 
-        /* ─── HERO ─── */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            padding: 120px 6% 80px;
-            position: relative;
-            z-index: 1;
+        /* Grid background */
+        .grid-bg {
             background-image: 
-                linear-gradient(rgba(5,5,10,0.4) 0%, rgba(5,5,10,0.95) 85%, var(--bg) 100%),
-                url('../assets/hero/cyberguard.png');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+                linear-gradient(rgba(0,240,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,240,255,0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
         }
 
-        .hero-left { flex: 1; max-width: 750px; }
-
-        .tag-wrap {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px 16px;
-            border: 1px solid var(--neon-dim);
-            background: rgba(0,240,255,0.05);
-            font-size: 0.7rem;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: var(--neon);
-            margin-bottom: 32px;
-            animation: fadeUp 0.8s both;
+        /* Reveal animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .status-dot {
-            width: 6px; height: 6px;
-            background: var(--neon);
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Custom cursor */
+        #cursor {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background: #00f0ff;
             border-radius: 50%;
-            box-shadow: 0 0 10px var(--neon);
-            animation: blink 1.5s infinite;
+            pointer-events: none;
+            z-index: 99999;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s, background 0.3s;
+            mix-blend-mode: difference;
         }
-        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
-        .hero h1 {
-            font-family: var(--display);
-            font-size: clamp(3.5rem, 8vw, 6.5rem);
-            font-weight: 900;
-            line-height: 1;
-            text-transform: uppercase;
-            letter-spacing: -2px;
-            margin-bottom: 32px;
-            animation: fadeUp 0.8s 0.2s both;
-        }
-        .hero h1 .accent { color: var(--neon); text-shadow: 0 0 30px rgba(0,240,255,0.3); }
-
-        .hero-desc {
-            font-size: 0.95rem;
-            line-height: 1.8;
-            color: var(--dim);
-            max-width: 480px;
-            margin-bottom: 48px;
-            animation: fadeUp 0.8s 0.4s both;
+        #cursor.hover {
+            width: 40px;
+            height: 40px;
+            background: rgba(0,240,255,0.2);
         }
 
-        .hero-actions {
-            display: flex;
-            gap: 20px;
-            animation: fadeUp 0.8s 0.6s both;
+        /* Terminal typing */
+        .terminal-text::after {
+            content: '|';
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
         }
 
-        .btn {
-            padding: 18px 40px;
-            font-family: var(--display);
-            font-weight: 800;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            cursor: none;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
+        /* Hexagon pattern */
+        .hex-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z' fill='%2300f0ff' fill-opacity='0.03'/%3E%3C/svg%3E");
         }
-        .btn-primary { background: var(--neon); color: #000; border: none; }
-        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,240,255,0.4); }
-
-        .btn-outline { background: transparent; color: var(--neon); border: 1px solid var(--neon); }
-        .btn-outline:hover { background: rgba(0,240,255,0.1); }
-
-        /* ─── HUD PANEL ─── */
-        .hero-right {
-            flex: 1;
-            display: flex;
-            justify-content: flex-end;
-            perspective: 1000px;
-        }
-
-        .hud-card {
-            background: rgba(5,5,10,0.85);
-            border: 1px solid var(--neon-dim);
-            backdrop-filter: blur(10px);
-            padding: 32px;
-            width: 320px;
-            transform: rotateY(-15deg);
-            animation: hudFade 1s 0.8s both;
-        }
-        @keyframes hudFade { from { opacity: 0; transform: rotateY(-30deg) translateZ(-100px); } to { opacity: 1; transform: rotateY(-15deg) translateZ(0); } }
-
-        .hud-header {
-            font-size: 0.7rem;
-            letter-spacing: 3px;
-            color: var(--neon);
-            margin-bottom: 24px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .hud-stat { margin-bottom: 20px; }
-        .hud-stat-label { font-size: 0.6rem; text-transform: uppercase; color: var(--dim); margin-bottom: 8px; }
-        .hud-progress { height: 2px; background: rgba(0,240,255,0.1); position: relative; }
-        .hud-progress-fill { position: absolute; height: 100%; background: var(--neon); width: 0%; transition: width 1s ease-out; }
-        
-        .threat-log {
-            margin-top: 30px;
-            font-size: 0.65rem;
-            color: var(--dim);
-            max-height: 120px;
-            overflow: hidden;
-        }
-        .log-entry { margin-bottom: 6px; border-left: 1px solid var(--neon-dim); padding-left: 8px; }
-        .log-entry span { color: var(--neon); }
-        .log-entry.critical { border-left-color: var(--danger); }
-        .log-entry.critical span { color: var(--danger); }
-
-        /* ─── TICKER ─── */
-        .ticker {
-            background: var(--neon);
-            color: #000;
-            padding: 12px 0;
-            overflow: hidden;
-            white-space: nowrap;
-            font-weight: 700;
-            font-size: 0.8rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-        .ticker-inner { display: inline-block; animation: ticker 30s linear infinite; }
-        @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-
-        /* ─── FOOTER ─── */
-        footer {
-            padding: 40px 6%;
-            border-top: 1px solid var(--neon-dim);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.7rem;
-            color: var(--dim);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        @keyframes fadeUp { from { opacity:0; transform: translateY(30px); } to { opacity:1; transform: translateY(0); } }
-
-        .back-link { color: var(--neon); text-decoration: none; transition: opacity 0.3s; }
-        .back-link:hover { opacity: 0.7; }
     </style>
 </head>
-<body>
+<body class="noise-overlay">
 
-<canvas id="dataStream"></canvas>
-<div id="cursor"></div>
-<div id="cursor-ring"></div>
+    <!-- Custom Cursor -->
+    <div id="cursor"></div>
 
-<nav>
-    <div class="logo">
-        <div class="logo-icon"></div>
-        CYBER<span>GUARD</span>
-    </div>
-    <div class="nav-links">
-        <a href="#">Аналитика</a>
-        <a href="#">Стек</a>
-        <a href="#">Безопасность</a>
-    </div>
-</nav>
+    <!-- Matrix Rain Canvas -->
+    <canvas id="matrixCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-20"></canvas>
 
-<section class="hero">
-    <div class="hero-left">
-        <div class="tag-wrap">
-            <span class="status-dot"></span>
-            DEFENSE SYSTEMS ONLINE
-        </div>
-        <h1>
-            ЗАЩИТА <span class="accent">НОВОГО</span><br>ПОКОЛЕНИЯ
-        </h1>
-        <p class="hero-desc">
-            Разверните интеллектуальный щит CyberGuard за считанные минуты. Полная неуязвимость для угроз любого типа.
-        </p>
-        <div class="hero-actions">
-            <button class="btn btn-primary">ЗАПУСТИТЬ СКАНЕР</button>
-            <button class="btn btn-outline">ДОКУМЕНТАЦИЯ</button>
-        </div>
-    </div>
-
-    <div class="hero-right">
-        <div class="hud-card">
-            <div class="hud-header">
-                <span>SYSTEM STATUS</span>
-                <span>V3.04</span>
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 border-b border-cyan-dim bg-bg/80 backdrop-blur-xl">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3 group cursor-none">
+                <div class="w-10 h-10 relative">
+                    <div class="absolute inset-0 border-2 border-cyan rounded-lg animate-pulse-slow"></div>
+                    <div class="absolute inset-1 bg-cyan/20 rounded"></div>
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <svg class="w-5 h-5 text-cyan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                    </div>
+                </div>
+                <span class="font-sans font-bold text-xl tracking-tight">CYBER<span class="text-cyan">GUARD</span></span>
             </div>
             
-            <div class="hud-stat">
-                <div class="hud-stat-label">Neural Shield Integrity</div>
-                <div class="hud-progress"><div class="hud-progress-fill" style="width: 98%;"></div></div>
-            </div>
-            
-            <div class="hud-stat">
-                <div class="hud-stat-label">Data Packet Filtering</div>
-                <div class="hud-progress"><div class="hud-progress-fill" style="width: 76%;"></div></div>
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#features" class="text-text-secondary text-sm font-mono tracking-wider hover:text-cyan transition-colors">ВОЗМОЖНОСТИ</a>
+                <a href="#how-it-works" class="text-text-secondary text-sm font-mono tracking-wider hover:text-cyan transition-colors">КАК ЭТО РАБОТАЕТ</a>
+                <a href="#technology" class="text-text-secondary text-sm font-mono tracking-wider hover:text-cyan transition-colors">ТЕХНОЛОГИИ</a>
+                <a href="#pricing" class="text-text-secondary text-sm font-mono tracking-wider hover:text-cyan transition-colors">ТАРИФЫ</a>
             </div>
 
-            <div class="threat-log" id="threatLog">
-                <div class="log-entry">[08:42:11] <span>FIREWALL_ACTIVE</span></div>
-                <div class="log-entry">[08:42:45] <span>ENCRYPTION_COMPLETE</span></div>
-                <div class="log-entry critical">[08:43:02] <span>THREAT_BLOCK: IP_201.22.4</span></div>
-                <div class="log-entry">[08:43:15] <span>SYSTEM_STABLE</span></div>
+            <div class="flex items-center gap-4">
+                <a href="#" class="hidden sm:block text-text-secondary text-sm font-mono tracking-wider hover:text-cyan transition-colors">ВОЙТИ</a>
+                <button class="interactive px-5 py-2.5 bg-cyan text-bg font-bold text-sm tracking-wider uppercase rounded-lg hover:shadow-[0_0_30px_rgba(0,240,255,0.4)] transition-all duration-300">
+                    НАЧАТЬ СЕЙЧАС
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+        <!-- Background glow -->
+        <div class="absolute inset-0 bg-hero-glow"></div>
+        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan/5 rounded-full blur-3xl animate-pulse-slow"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple/5 rounded-full blur-3xl animate-pulse-slow" style="animation-delay: 2s;"></div>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-6 text-center">
+            <!-- Status badge -->
+            <div class="reveal inline-flex items-center gap-3 px-4 py-2 rounded-full border border-cyan-dim bg-cyan/5 backdrop-blur-sm mb-8">
+                <span class="relative flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-cyan"></span>
+                </span>
+                <span class="font-mono text-xs tracking-[0.2em] text-cyan">DEFENSE SYSTEMS ONLINE v4.2</span>
+            </div>
+
+            <!-- Main heading -->
+            <h1 class="reveal font-sans font-black text-5xl md:text-7xl lg:text-8xl leading-tight tracking-tight mb-6">
+                <span class="glitch-text" data-text="ЗАЩИТА НОВОГО">ЗАЩИТА НОВОГО</span><br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan via-cyan to-purple neon-text">ПОКОЛЕНИЯ</span>
+            </h1>
+
+            <!-- Subheading -->
+            <p class="reveal font-mono text-text-secondary text-sm md:text-base lg:text-lg max-w-2xl mx-auto mb-10 leading-relaxed tracking-wide">
+                Разверните интеллектуальный щит <span class="text-cyan">CyberGuard</span> за считанные минуты. 
+                Нейросетевой анализ угроз в реальном времени. Полная неуязвимость для атак любого типа.
+            </p>
+
+            <!-- CTA buttons -->
+            <div class="reveal flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+                <button class="interactive group relative px-8 py-4 bg-cyan text-bg font-bold text-sm tracking-[0.15em] uppercase rounded-lg overflow-hidden transition-all duration-300 hover:shadow-[0_0_40px_rgba(0,240,255,0.5)]">
+                    <span class="relative z-10">ЗАПУСТИТЬ СКАНЕР →</span>
+                    <div class="absolute inset-0 bg-gradient-to-r from-cyan to-purple opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </button>
+                <button class="interactive px-8 py-4 border border-cyan-dim text-cyan font-mono text-sm tracking-[0.15em] uppercase rounded-lg hover:bg-cyan/10 transition-all duration-300">
+                    ДОКУМЕНТАЦИЯ
+                </button>
+            </div>
+
+            <!-- Hero visual / HUD -->
+            <div class="reveal max-w-5xl mx-auto">
+                <div class="relative glass-card rounded-2xl p-1">
+                    <div class="absolute -top-px left-1/2 -translate-x-1/2 w-1/3 h-px bg-gradient-to-r from-transparent via-cyan to-transparent"></div>
+                    
+                    <!-- HUD header -->
+                    <div class="flex items-center justify-between px-6 py-3 border-b border-cyan-dim/30">
+                        <div class="flex items-center gap-2">
+                            <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                        </div>
+                        <span class="font-mono text-xs text-text-dim">cyberguard_terminal.exe</span>
+                        <div class="w-16"></div>
+                    </div>
+
+                    <!-- HUD content -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-0">
+                        <!-- Left panel -->
+                        <div class="p-6 border-b md:border-b-0 md:border-r border-cyan-dim/30">
+                            <div class="font-mono text-xs text-text-dim mb-4">[SYSTEM_STATUS]</div>
+                            <div class="space-y-4">
+                                <div>
+                                    <div class="flex justify-between text-xs font-mono mb-2">
+                                        <span class="text-text-secondary">Neural Shield</span>
+                                        <span class="text-cyan">98.7%</span>
+                                    </div>
+                                    <div class="h-1 bg-white/10 rounded-full overflow-hidden">
+                                        <div class="h-full w-[98.7%] bg-gradient-to-r from-cyan to-cyan-glow rounded-full"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-xs font-mono mb-2">
+                                        <span class="text-text-secondary">Threat Detection</span>
+                                        <span class="text-cyan">ACTIVE</span>
+                                    </div>
+                                    <div class="h-1 bg-white/10 rounded-full overflow-hidden">
+                                        <div class="h-full w-full bg-gradient-to-r from-cyan to-cyan-glow rounded-full animate-pulse"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-xs font-mono mb-2">
+                                        <span class="text-text-secondary">Encryption Level</span>
+                                        <span class="text-cyan">AES-4096</span>
+                                    </div>
+                                    <div class="h-1 bg-white/10 rounded-full overflow-hidden">
+                                        <div class="h-full w-[100%] bg-gradient-to-r from-purple to-purple/50 rounded-full"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Center panel -->
+                        <div class="p-6 border-b md:border-b-0 md:border-r border-cyan-dim/30 flex flex-col items-center justify-center">
+                            <div class="relative w-32 h-32 mb-4">
+                                <div class="absolute inset-0 border-2 border-cyan-dim rounded-full animate-spin" style="animation-duration: 3s;"></div>
+                                <div class="absolute inset-2 border border-cyan/30 rounded-full animate-spin" style="animation-duration: 2s; animation-direction: reverse;"></div>
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <span class="font-mono text-2xl font-bold text-cyan">98%</span>
+                                </div>
+                            </div>
+                            <span class="font-mono text-xs text-text-dim">SECURITY SCORE</span>
+                        </div>
+
+                        <!-- Right panel - Terminal -->
+                        <div class="p-6 font-mono text-xs">
+                            <div class="font-mono text-xs text-text-dim mb-3">[THREAT_LOG]</div>
+                            <div class="space-y-2 text-text-secondary" id="threatLog">
+                                <div class="terminal-text">
+                                    <span class="text-cyan">[12:04:23]</span> SCAN_COMPLETE
+                                </div>
+                                <div>
+                                    <span class="text-cyan">[12:04:45]</span> <span class="text-green-400">NO_THREATS_DETECTED</span>
+                                </div>
+                                <div>
+                                    <span class="text-cyan">[12:05:01]</span> ENCRYPTION_ACTIVE
+                                </div>
+                                <div>
+                                    <span class="text-danger">[12:05:34]</span> <span class="text-danger">BLOCKED: IP_192.168.1.47</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll indicator -->
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+            <span class="font-mono text-[10px] tracking-[0.3em] text-text-dim">SCROLL</span>
+            <div class="w-px h-12 bg-gradient-to-b from-cyan to-transparent"></div>
+        </div>
+    </section>
+
+    <!-- Ticker -->
+    <div class="relative z-10 bg-cyan py-3 overflow-hidden">
+        <div class="flex animate-[ticker_30s_linear_infinite]">
+            <div class="flex-shrink-0 flex items-center gap-8 px-4">
+                <span class="font-mono text-bg font-bold text-sm tracking-widest">AI-SECURITY MONITORING ENABLED</span>
+                <span class="w-1.5 h-1.5 bg-bg rounded-full"></span>
+                <span class="font-mono text-bg font-bold text-sm tracking-widest">THREAT NEUTRALIZATION ACTIVE</span>
+                <span class="w-1.5 h-1.5 bg-bg rounded-full"></span>
+                <span class="font-mono text-bg font-bold text-sm tracking-widest">ENCRYPTION PROTOCOL RSA-4096</span>
+                <span class="w-1.5 h-1.5 bg-bg rounded-full"></span>
+                <span class="font-mono text-bg font-bold text-sm tracking-widest">QUANTUM DEFENSE READY</span>
+                <span class="w-1.5 h-1.5 bg-bg rounded-full"></span>
+                <span class="font-mono text-bg font-bold text-sm tracking-widest">NEURAL ENGINE v4.2</span>
+                <span class="w-1.5 h-1.5 bg-bg rounded-full"></span>
+            </div>
+            <div class="flex-shrink-0 flex items-center gap-8 px-4">
+                <span class="font-mono text-bg font-bold text-sm tracking-widest">AI-SECURITY MONITORING ENABLED</span>
+                <span class="w-1.5 h-1.5 bg-bg rounded-full"></span>
+                <span class="font-mono text-bg font-bold text-sm tracking-widest">THREAT NEUTRALIZATION ACTIVE</span>
+                <span class="w-1.5 h-1.5 bg-bg rounded-full"></span>
+                <span class="font-mono text-bg font-bold text-sm tracking-widest">ENCRYPTION PROTOCOL RSA-4096</span>
+                <span class="w-1.5 h-1.5 bg-bg rounded-full"></span>
+                <span class="font-mono text-bg font-bold text-sm tracking-widest">QUANTUM DEFENSE READY</span>
+                <span class="w-1.5 h-1.5 bg-bg rounded-full"></span>
+                <span class="font-mono text-bg font-bold text-sm tracking-widest">NEURAL ENGINE v4.2</span>
+                <span class="w-1.5 h-1.5 bg-bg rounded-full"></span>
             </div>
         </div>
     </div>
-</section>
 
-<div class="ticker">
-    <div class="ticker-inner">
-        AI-SECURITY MONITORING ENABLED • THREAT NEUTRALIZATION ACTIVE • ENCRYPTION PROTOCOL RSA-4096 • QUANTUM DEFENSE READY • NEURAL ENGINE v4.2 • 
-        AI-SECURITY MONITORING ENABLED • THREAT NEUTRALIZATION ACTIVE • ENCRYPTION PROTOCOL RSA-4096 • QUANTUM DEFENSE READY • NEURAL ENGINE v4.2 • 
-    </div>
-</div>
+    <!-- Stats Section -->
+    <section class="relative z-10 py-24 bg-bg-elevated border-b border-cyan-dim/20">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div class="reveal text-center">
+                    <div class="font-sans font-black text-5xl md:text-6xl text-transparent bg-clip-text bg-gradient-to-b from-cyan to-cyan/50 neon-text mb-2" data-target="99.9">0</div>
+                    <div class="font-mono text-xs text-text-dim tracking-[0.2em]">UPTIME %</div>
+                </div>
+                <div class="reveal text-center" style="transition-delay: 100ms;">
+                    <div class="font-sans font-black text-5xl md:text-6xl text-transparent bg-clip-text bg-gradient-to-b from-cyan to-cyan/50 neon-text mb-2" data-target="14">0</div>
+                    <div class="font-mono text-xs text-text-dim tracking-[0.2em]">MILLION THREATS BLOCKED</div>
+                </div>
+                <div class="reveal text-center" style="transition-delay: 200ms;">
+                    <div class="font-sans font-black text-5xl md:text-6xl text-transparent bg-clip-text bg-gradient-to-b from-cyan to-cyan/50 neon-text mb-2" data-target="0.02">0</div>
+                    <div class="font-mono text-xs text-text-dim tracking-[0.2em]">SEC AVG RESPONSE TIME</div>
+                </div>
+                <div class="reveal text-center" style="transition-delay: 300ms;">
+                    <div class="font-sans font-black text-5xl md:text-6xl text-transparent bg-clip-text bg-gradient-to-b from-cyan to-cyan/50 neon-text mb-2" data-target="24">0</div>
+                    <div class="font-mono text-xs text-text-dim tracking-[0.2em]">COUNTRIES PROTECTED</div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<footer>
-    <div>© 2026 CYBERGUARD SECURITY</div>
-    <a href="../index.html" class="back-link">← НАЗАД В ПОРТФОЛИО</a>
-</footer>
+    <!-- Features Section -->
+    <section id="features" class="relative z-10 py-32 grid-bg">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="reveal text-center mb-20">
+                <span class="font-mono text-xs text-cyan tracking-[0.3em]">[FEATURES]</span>
+                <h2 class="font-sans font-black text-4xl md:text-6xl mt-4 mb-6">
+                    НЕЙРОННАЯ<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan to-purple">ЗАЩИТА</span>
+                </h2>
+                <p class="font-mono text-text-secondary text-sm max-w-xl mx-auto leading-relaxed">
+                    Наша ИИ-система обучается на миллионах атак в день, предсказывая и нейтрализуя угрозы до их реализации.
+                </p>
+            </div>
 
-<script>
-    /* ─── CURSOR ─── */
-    const cursor = document.getElementById('cursor');
-    const ring = document.getElementById('cursor-ring');
-    document.addEventListener('mousemove', (e) => {
-        cursor.style.left = e.clientX + 'px';
-        cursor.style.top = e.clientY + 'px';
-        ring.style.left = e.clientX + 'px';
-        ring.style.top = e.clientY + 'px';
-    });
-    
-    document.querySelectorAll('a, button').forEach(el => {
-        el.addEventListener('mouseenter', () => {
-            cursor.style.width = '20px';
-            cursor.style.height = '20px';
-            ring.style.width = '60px';
-            ring.style.height = '60px';
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Feature 1 -->
+                <div class="reveal glass-card rounded-2xl p-8 group">
+                    <div class="w-14 h-14 rounded-xl bg-cyan-dim flex items-center justify-center mb-6 group-hover:bg-cyan/20 transition-colors">
+                        <svg class="w-7 h-7 text-cyan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            <path d="M9 12l2 2 4-4"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-sans font-bold text-xl mb-3">Neural Shield</h3>
+                    <p class="font-mono text-text-dim text-sm leading-relaxed">
+                        Адаптивный защитный слой на базе глубокого обучения. Анализирует поведение в реальном времени и блокирует аномалии.
+                    </p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="reveal glass-card rounded-2xl p-8 group" style="transition-delay: 100ms;">
+                    <div class="w-14 h-14 rounded-xl bg-cyan-dim flex items-center justify-center mb-6 group-hover:bg-cyan/20 transition-colors">
+                        <svg class="w-7 h-7 text-cyan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="2" y="2" width="20" height="8" rx="2"/>
+                            <rect x="2" y="14" width="20" height="8" rx="2"/>
+                            <circle cx="6" cy="6" r="1.5" fill="currentColor"/>
+                            <circle cx="6" cy="18" r="1.5" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-sans font-bold text-xl mb-3">Quantum Encryption</h3>
+                    <p class="font-mono text-text-dim text-sm leading-relaxed">
+                        Постквантовое шифрование данных. Ваши ключи защищены даже от квантовых компьютеров будущего.
+                    </p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="reveal glass-card rounded-2xl p-8 group" style="transition-delay: 200ms;">
+                    <div class="w-14 h-14 rounded-xl bg-cyan-dim flex items-center justify-center mb-6 group-hover:bg-cyan/20 transition-colors">
+                        <svg class="w-7 h-7 text-cyan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-sans font-bold text-xl mb-3">Zero-Day Defense</h3>
+                    <p class="font-mono text-text-dim text-sm leading-relaxed">
+                        Обнаружение неизвестных угроз по поведенческим паттернам. Не нужно ждать обновлений сигнатур.
+                    </p>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="reveal glass-card rounded-2xl p-8 group" style="transition-delay: 300ms;">
+                    <div class="w-14 h-14 rounded-xl bg-cyan-dim flex items-center justify-center mb-6 group-hover:bg-cyan/20 transition-colors">
+                        <svg class="w-7 h-7 text-cyan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-sans font-bold text-xl mb-3">Global Threat Intel</h3>
+                    <p class="font-mono text-text-dim text-sm leading-relaxed">
+                        Обмен данными об угрозах между 10,000+ защищаемых систем. Коллективный иммунитет в действии.
+                    </p>
+                </div>
+
+                <!-- Feature 5 -->
+                <div class="reveal glass-card rounded-2xl p-8 group" style="transition-delay: 400ms;">
+                    <div class="w-14 h-14 rounded-xl bg-cyan-dim flex items-center justify-center mb-6 group-hover:bg-cyan/20 transition-colors">
+                        <svg class="w-7 h-7 text-cyan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-sans font-bold text-xl mb-3">Instant Response</h3>
+                    <p class="font-mono text-text-dim text-sm leading-relaxed">
+                        Автоматическая нейтрализация угроз за 0.02 секунды. Быстрее, чем человек успеет моргнуть.
+                    </p>
+                </div>
+
+                <!-- Feature 6 -->
+                <div class="reveal glass-card rounded-2xl p-8 group" style="transition-delay: 500ms;">
+                    <div class="w-14 h-14 rounded-xl bg-cyan-dim flex items-center justify-center mb-6 group-hover:bg-cyan/20 transition-colors">
+                        <svg class="w-7 h-7 text-cyan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M4 14.899A7 7 0 1115.71 8h1.79a4.5 4.5 0 012.5 8.242"/>
+                            <path d="M12 12v9"/>
+                            <path d="M8 17l4 4 4-4"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-sans font-bold text-xl mb-3">Easy Integration</h3>
+                    <p class="font-mono text-text-dim text-sm leading-relaxed">
+                        Развертывание за 5 минут через API или готовый SDK. Поддержка всех популярных фреймворков.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section id="how-it-works" class="relative z-10 py-32 bg-bg-elevated">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="reveal text-center mb-20">
+                <span class="font-mono text-xs text-purple tracking-[0.3em]">[PROCESS]</span>
+                <h2 class="font-sans font-black text-4xl md:text-6xl mt-4 mb-6">
+                    КАК ЭТО<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-purple to-cyan">РАБОТАЕТ</span>
+                </h2>
+            </div>
+
+            <div class="relative">
+                <!-- Connection line -->
+                <div class="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-cyan via-purple to-cyan hidden md:block"></div>
+
+                <div class="space-y-12 md:space-y-24">
+                    <!-- Step 1 -->
+                    <div class="reveal flex flex-col md:flex-row items-center gap-8 md:gap-16">
+                        <div class="md:w-1/2 md:text-right">
+                            <span class="font-mono text-xs text-cyan tracking-[0.2em]">[STEP 01]</span>
+                            <h3 class="font-sans font-bold text-2xl mt-2 mb-4">АНАЛИЗ УГРОЗ</h3>
+                            <p class="font-mono text-text-dim text-sm leading-relaxed">
+                                Система сканирует входящий трафик в реальном времени, анализируя каждый пакет данных через 47-слойную нейросеть.
+                            </p>
+                        </div>
+                        <div class="relative flex-shrink-0">
+                            <div class="w-16 h-16 rounded-full bg-bg border-2 border-cyan flex items-center justify-center">
+                                <span class="font-mono font-bold text-cyan">01</span>
+                            </div>
+                            <div class="absolute inset-0 rounded-full bg-cyan/20 animate-ping"></div>
+                        </div>
+                        <div class="md:w-1/2">
+                            <div class="glass-card rounded-xl p-6 font-mono text-xs">
+                                <div class="text-text-dim mb-2">// Трафик в реальном времени</div>
+                                <div class="text-cyan">> PACKET_ANALYZE: OK</div>
+                                <div class="text-cyan">> DEEP_SCAN: ACTIVE</div>
+                                <div class="text-text-dim">> NEURAL_LAYER: 47/47</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="reveal flex flex-col md:flex-row items-center gap-8 md:gap-16">
+                        <div class="md:w-1/2">
+                            <div class="glass-card rounded-xl p-6 font-mono text-xs">
+                                <div class="text-text-dim mb-2">// Обнаружение аномалии</div>
+                                <div class="text-danger">> ANOMALY_DETECTED: 98.7%</div>
+                                <div class="text-danger">> CLASS: SQL_INJECTION</div>
+                                <div class="text-cyan">> ACTION: BLOCK_INITIATED</div>
+                            </div>
+                        </div>
+                        <div class="relative flex-shrink-0">
+                            <div class="w-16 h-16 rounded-full bg-bg border-2 border-purple flex items-center justify-center">
+                                <span class="font-mono font-bold text-purple">02</span>
+                            </div>
+                            <div class="absolute inset-0 rounded-full bg-purple/20 animate-ping" style="animation-delay: 0.5s;"></div>
+                        </div>
+                        <div class="md:w-1/2 md:text-right">
+                            <span class="font-mono text-xs text-purple tracking-[0.2em]">[STEP 02]</span>
+                            <h3 class="font-sans font-bold text-2xl mt-2 mb-4">ДЕТЕКЦИЯ АТАКИ</h3>
+                            <p class="font-mono text-text-dim text-sm leading-relaxed">
+                                При обнаружении аномалии система классифицирует угрозу и выбирает оптимальную стратегию защиты за 0.02 секунды.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="reveal flex flex-col md:flex-row items-center gap-8 md:gap-16">
+                        <div class="md:w-1/2 md:text-right">
+                            <span class="font-mono text-xs text-cyan tracking-[0.2em]">[STEP 03]</span>
+                            <h3 class="font-sans font-bold text-2xl mt-2 mb-4">НЕЙТРАЛИЗАЦИЯ</h3>
+                            <p class="font-mono text-text-dim text-sm leading-relaxed">
+                                Угроза блокируется на уровне ядра. Атакующий получает фейковый ответ, не подозревая о провале операции.
+                            </p>
+                        </div>
+                        <div class="relative flex-shrink-0">
+                            <div class="w-16 h-16 rounded-full bg-bg border-2 border-cyan flex items-center justify-center">
+                                <span class="font-mono font-bold text-cyan">03</span>
+                            </div>
+                            <div class="absolute inset-0 rounded-full bg-cyan/20 animate-ping" style="animation-delay: 1s;"></div>
+                        </div>
+                        <div class="md:w-1/2">
+                            <div class="glass-card rounded-xl p-6 font-mono text-xs">
+                                <div class="text-text-dim mb-2">// Нейтрализация</div>
+                                <div class="text-green-400">> THREAT_NEUTRALIZED</div>
+                                <div class="text-text-dim">> FAKE_RESPONSE: SENT</div>
+                                <div class="text-text-dim">> LOG_ENTRY: CREATED</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technology Section -->
+    <section id="technology" class="relative z-10 py-32 hex-pattern">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="reveal text-center mb-20">
+                <span class="font-mono text-xs text-cyan tracking-[0.3em]">[TECHNOLOGY]</span>
+                <h2 class="font-sans font-black text-4xl md:text-6xl mt-4 mb-6">
+                    NEURAL<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan to-purple">ENGINE</span>
+                </h2>
+                <p class="font-mono text-text-secondary text-sm max-w-xl mx-auto leading-relaxed">
+                    Наша проприетарная архитектура нейросети обрабатывает 2.4 миллиона запросов в секунду с задержкой менее 20 микросекунд.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                <div class="reveal glass-card rounded-2xl p-8 border-l-4 border-l-cyan">
+                    <div class="font-mono text-xs text-text-dim mb-4">[ARCHITECTURE]</div>
+                    <h3 class="font-sans font-bold text-xl mb-4">Глубокие нейросети</h3>
+                    <ul class="space-y-3 font-mono text-sm text-text-secondary">
+                        <li class="flex items-center gap-3">
+                            <span class="w-1.5 h-1.5 bg-cyan rounded-full"></span>
+                            <span>47 слоёв трансформеров</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <span class="w-1.5 h-1.5 bg-cyan rounded-full"></span>
+                            <span>Attention механизмы v4</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <span class="w-1.5 h-1.5 bg-cyan rounded-full"></span>
+                            <span>Обучение на 10B+ примеров</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="reveal glass-card rounded-2xl p-8 border-l-4 border-l-purple">
+                    <div class="font-mono text-xs text-text-dim mb-4">[PERFORMANCE]</div>
+                    <h3 class="font-sans font-bold text-xl mb-4">Экстремальная скорость</h3>
+                    <ul class="space-y-3 font-mono text-sm text-text-secondary">
+                        <li class="flex items-center gap-3">
+                            <span class="w-1.5 h-1.5 bg-purple rounded-full"></span>
+                            <span>2.4M запросов/сек</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <span class="w-1.5 h-1.5 bg-purple rounded-full"></span>
+                            <span>20μs задержка ответа</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <span class="w-1.5 h-1.5 bg-purple rounded-full"></span>
+                            <span>99.99% uptime SLA</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="relative z-10 py-32 overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-bg via-bg to-cyan/5"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-cyan/5 rounded-full blur-3xl"></div>
+
+        <div class="relative max-w-4xl mx-auto px-6 text-center">
+            <div class="reveal">
+                <h2 class="font-sans font-black text-4xl md:text-6xl mb-6">
+                    ГОТОВЫ К<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan to-purple">ЗАЩИТЕ?</span>
+                </h2>
+                <p class="font-mono text-text-secondary text-sm max-w-xl mx-auto mb-10 leading-relaxed">
+                    Начните бесплатно. Первые 14 дней — полный доступ ко всем функциям. 
+                    Никакой кредитной карты.
+                </p>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <button class="interactive px-10 py-5 bg-cyan text-bg font-bold text-sm tracking-[0.15em] uppercase rounded-lg hover:shadow-[0_0_40px_rgba(0,240,255,0.5)] transition-all duration-300">
+                        ЗАПУСТИТЬ СКАНЕР
+                    </button>
+                    <button class="interactive px-10 py-5 border border-cyan-dim text-cyan font-mono text-sm tracking-[0.15em] uppercase rounded-lg hover:bg-cyan/10 transition-all duration-300">
+                        СВЯЗАТЬСЯ С НАМИ
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="relative z-10 border-t border-cyan-dim/30 bg-bg-elevated">
+        <div class="max-w-7xl mx-auto px-6 py-16">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div class="md:col-span-2">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-8 h-8 relative">
+                            <div class="absolute inset-0 border-2 border-cyan rounded"></div>
+                            <div class="absolute inset-1 bg-cyan/20 rounded"></div>
+                        </div>
+                        <span class="font-sans font-bold text-lg">CYBER<span class="text-cyan">GUARD</span></span>
+                    </div>
+                    <p class="font-mono text-text-dim text-sm leading-relaxed max-w-sm">
+                        Интеллектуальная система кибербезопасности нового поколения. 
+                        Защита данных на базе ИИ в реальном времени.
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="font-mono text-xs text-cyan tracking-[0.2em] mb-6">ПРОДУКТ</h4>
+                    <ul class="space-y-3 font-mono text-sm text-text-secondary">
+                        <li><a href="#" class="hover:text-cyan transition-colors">Возможности</a></li>
+                        <li><a href="#" class="hover:text-cyan transition-colors">Интеграции</a></li>
+                        <li><a href="#" class="hover:text-cyan transition-colors">Цены</a></li>
+                        <li><a href="#" class="hover:text-cyan transition-colors">Changelog</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-mono text-xs text-cyan tracking-[0.2em] mb-6">КОМПАНИЯ</h4>
+                    <ul class="space-y-3 font-mono text-sm text-text-secondary">
+                        <li><a href="#" class="hover:text-cyan transition-colors">О нас</a></li>
+                        <li><a href="#" class="hover:text-cyan transition-colors">Блог</a></li>
+                        <li><a href="#" class="hover:text-cyan transition-colors">Карьера</a></li>
+                        <li><a href="#" class="hover:text-cyan transition-colors">Контакты</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-cyan-dim/20">
+                <p class="font-mono text-xs text-text-dim">© 2026 CYBERGUARD SECURITY. ALL RIGHTS RESERVED.</p>
+                <div class="flex items-center gap-6 mt-4 md:mt-0">
+                    <a href="#" class="font-mono text-xs text-text-dim hover:text-cyan transition-colors">PRIVACY</a>
+                    <a href="#" class="font-mono text-xs text-text-dim hover:text-cyan transition-colors">TERMS</a>
+                    <a href="#" class="font-mono text-xs text-text-dim hover:text-cyan transition-colors">SECURITY</a>
+                </div>
+            </div>
+
+            <div class="mt-8 text-center">
+                <a href="../index.html" class="inline-flex items-center gap-2 font-mono text-xs text-cyan hover:text-cyan/70 transition-colors">
+                    ← НАЗАД В ПОРТФОЛИО
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Custom cursor
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
         });
-        el.addEventListener('mouseleave', () => {
-            cursor.style.width = '8px';
-            cursor.style.height = '8px';
-            ring.style.width = '40px';
-            ring.style.height = '40px';
+
+        document.querySelectorAll('.interactive').forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
         });
-    });
 
-    /* ─── DATA STREAM CANVAS ─── */
-    const canvas = document.getElementById('dataStream');
-    const ctx = canvas.getContext('2d');
-    let w, h;
-
-    function resize() {
-        w = canvas.width = window.innerWidth;
-        h = canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resize);
-    resize();
-
-    const particles = [];
-    class Particle {
-        constructor() {
-            this.x = Math.random() * w;
-            this.y = Math.random() * h;
-            this.vx = (Math.random() - 0.5) * 1.5;
-            this.vy = (Math.random() - 0.5) * 1.5;
+        // Matrix rain effect
+        const matrixCanvas = document.getElementById('matrixCanvas');
+        const mCtx = matrixCanvas.getContext('2d');
+        
+        function resizeMatrix() {
+            matrixCanvas.width = window.innerWidth;
+            matrixCanvas.height = window.innerHeight;
         }
-        update() {
-            this.x += this.vx;
-            this.y += this.vy;
-            if(this.x < 0 || this.x > w) this.vx *= -1;
-            if(this.y < 0 || this.y > h) this.vy *= -1;
-        }
-        draw() {
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, 1.5, 0, Math.PI * 2);
-            ctx.fillStyle = '#00f0ff';
-            ctx.fill();
-        }
-    }
+        resizeMatrix();
+        window.addEventListener('resize', resizeMatrix);
 
-    for(let i=0; i<100; i++) particles.push(new Particle());
+        const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+        const fontSize = 14;
+        const columns = matrixCanvas.width / fontSize;
+        const drops = Array(Math.floor(columns)).fill(1);
 
-    function animate() {
-        ctx.clearRect(0,0,w,h);
-        particles.forEach((p, i) => {
-            p.update();
-            p.draw();
-            for(let j=i+1; j<particles.length; j++) {
-                const dist = Math.hypot(p.x - particles[j].x, p.y - particles[j].y);
-                if(dist < 150) {
-                    ctx.beginPath();
-                    ctx.moveTo(p.x, p.y);
-                    ctx.lineTo(particles[j].x, particles[j].y);
-                    ctx.strokeStyle = `rgba(0, 240, 255, ${1 - dist/150})`;
-                    ctx.lineWidth = 0.5;
-                    ctx.stroke();
+        function drawMatrix() {
+            mCtx.fillStyle = 'rgba(5, 5, 5, 0.05)';
+            mCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+            mCtx.fillStyle = '#00f0ff';
+            mCtx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = chars[Math.floor(Math.random() * chars.length)];
+                mCtx.fillText(text, i * fontSize, drops[i] * fontSize);
+                if (drops[i] * fontSize > matrixCanvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
                 }
+                drops[i]++;
             }
-        });
-        requestAnimationFrame(animate);
-    }
-    animate();
+        }
+        setInterval(drawMatrix, 50);
 
-    /* ─── LIVE THREAT LOG ─── */
-    const log = document.getElementById('threatLog');
-    const entries = [
-        '[11:02:45] ENCRYPTION_VERIFIED',
-        '[11:03:12] TRAFFIC_ANALYZE: OK',
-        '[11:03:44] PORT_SCAN_DETECTED',
-        '[11:03:44] ALERT: ATTEMPT_BLOCKED',
-        '[11:04:01] NEURAL_BUFFER_FLUSH'
-    ];
-    setInterval(() => {
-        const entry = document.createElement('div');
-        entry.className = 'log-entry';
-        const time = new Date().toLocaleTimeString('ru-RU', {hour: '2-digit', minute: '2-digit', second: '2-digit'});
-        const msg = entries[Math.floor(Math.random() * entries.length)];
-        entry.innerHTML = `[${time}] <span>${msg.split(': ')[1] || msg.split(' ')[1]}</span>`;
-        if(msg.includes('ALERT') || msg.includes('BLOCK')) entry.classList.add('critical');
-        log.appendChild(entry);
-        if(log.children.length > 8) log.removeChild(log.children[0]);
-    }, 3000);
-</script>
+        // Scroll reveal
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
 
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Counter animation
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const target = parseFloat(entry.target.dataset.target);
+                    const isFloat = target % 1 !== 0;
+                    let current = 0;
+                    const duration = 2000;
+                    const step = target / (duration / 16);
+                    
+                    const timer = setInterval(() => {
+                        current += step;
+                        if (current >= target) {
+                            current = target;
+                            clearInterval(timer);
+                        }
+                        entry.target.textContent = isFloat ? current.toFixed(1) : Math.floor(current);
+                    }, 16);
+                    
+                    counterObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('[data-target]').forEach(el => counterObserver.observe(el));
+
+        // Live threat log
+        const threatLog = document.getElementById('threatLog');
+        const logMessages = [
+            { text: 'SCAN_COMPLETE', type: 'normal' },
+            { text: 'NO_THREATS_DETECTED', type: 'success' },
+            { text: 'ENCRYPTION_ACTIVE', type: 'normal' },
+            { text: 'BLOCKED: IP_' + Math.floor(Math.random() * 255) + '.' + Math.floor(Math.random() * 255), type: 'danger' },
+            { text: 'NEURAL_BUFFER_FLUSH', type: 'normal' },
+        ];
+
+        setInterval(() => {
+            const msg = logMessages[Math.floor(Math.random() * logMessages.length)];
+            const time = new Date().toLocaleTimeString('ru-RU', { hour12: false });
+            const div = document.createElement('div');
+            
+            let colorClass = 'text-text-secondary';
+            if (msg.type === 'success') colorClass = 'text-green-400';
+            if (msg.type === 'danger') colorClass = 'text-danger';
+            
+            div.innerHTML = `<span class="text-cyan">[${time}]</span> <span class="${colorClass}">${msg.text}</span>`;
+            threatLog.appendChild(div);
+            
+            if (threatLog.children.length > 6) {
+                threatLog.removeChild(threatLog.children[0]);
+            }
+        }, 2500);
+    </script>
 </body>
 </html>
